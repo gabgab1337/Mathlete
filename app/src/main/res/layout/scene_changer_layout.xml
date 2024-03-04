@@ -1,0 +1,80 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!-- Top Section -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal">
+
+        <!-- Top Left Button -->
+        <Button
+            android:id="@+id/buttonProfile"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/buttonProfile"
+            android:layout_weight="1" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"/>
+
+        <!-- Top Right Button -->
+        <Button
+            android:id="@+id/buttonSettings"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/buttonSettings"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <!-- Center Section -->
+    <FrameLayout
+        android:id="@+id/centerSection"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+        <!-- Add your main screen content here -->
+        <TextView
+            android:id="@+id/centerText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+    </FrameLayout>
+
+    <!-- Bottom Section -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal">
+
+        <!-- Bottom Left Button -->
+        <Button
+            android:id="@+id/buttonProgress"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/buttonProgress"
+            android:layout_weight="1" />
+
+        <!-- Bottom Center Button -->
+        <Button
+            android:id="@+id/buttonLessons"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/buttonLessons"
+            android:layout_weight="1" />
+
+        <!-- Bottom Right Button -->
+        <Button
+            android:id="@+id/buttonGenerator"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/buttonGenerator"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+</LinearLayout>

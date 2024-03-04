@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Mathlete</string>
+    <string name="buttonProfile">Profil</string>
+    <string name="buttonSettings">Ustawienia</string>
+    <string name="buttonProgress">Postępy</string>
+    <string name="buttonLessons">Lekcje</string>
+    <string name="buttonGenerator">Generator</string>
+</resources>
