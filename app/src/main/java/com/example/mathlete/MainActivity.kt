@@ -13,15 +13,15 @@ class MainActivity : AppCompatActivity() {
         centerSceneText.text = "WITAJ W MATHLETE!"
         val buttonGenerator: Button = findViewById(R.id.buttonGenerator)
         buttonGenerator.setOnClickListener {
-
+            centerSceneText.text = "Generator potężny"
         }
         val buttonLessons: Button = findViewById(R.id.buttonLessons)
         buttonLessons.setOnClickListener {
-
+            centerSceneText.text = "Lekcje takie o"
         }
         val buttonProgress: Button = findViewById(R.id.buttonProgress)
         buttonProgress.setOnClickListener {
-
+            centerSceneText.text = "Postępy"
         }
     }
 }
