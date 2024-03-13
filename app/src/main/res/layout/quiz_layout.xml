@@ -9,30 +9,31 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:text="Questions Left: " />
+        android:text="@string/questionsLeft" />
 
     <TextView
         android:id="@+id/timer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:text="@string/timer" />
+
+    <ImageButton
+        android:id="@+id/closeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
-        android:text="Time: " />
+        android:src="@android:drawable/ic_menu_close_clear_cancel" />
 
     <TextView
         android:id="@+id/question"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="Question" />
+        android:text="@string/question" />
 
-    <TextView
-        android:id="@+id/linearFunction"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/question"
-        android:layout_centerHorizontal="true"
-        android:text="y = mx + b" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -44,24 +45,24 @@
             android:id="@+id/buttonAnswer1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Answer 1" />
+            android:text="@string/buttonAnswer1" />
 
         <Button
             android:id="@+id/buttonAnswer2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Answer 2" />
+            android:text="@string/buttonAnswer2" />
 
         <Button
             android:id="@+id/buttonAnswer3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Answer 3" />
+            android:text="@string/buttonAnswer3" />
 
         <Button
             android:id="@+id/buttonAnswer4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Answer 4" />
+            android:text="@string/buttonAnswer4" />
     </LinearLayout>
 </RelativeLayout>

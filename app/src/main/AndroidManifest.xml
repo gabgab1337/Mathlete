@@ -12,6 +12,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Mathlete"
         tools:targetApi="31">
+
+        <activity
+            android:name=".QuizActivity"
+            android:exported="true">
+        </activity>
+
         <activity
             android:name=".MainActivity"
             android:exported="true"

@@ -5,4 +5,11 @@
     <string name="buttonProgress">Postępy</string>
     <string name="buttonLessons">Lekcje</string>
     <string name="buttonGenerator">Generator</string>
+    <string name="timer" />
+    <string name="question" />
+    <string name="buttonAnswer1" />
+    <string name="buttonAnswer2" />
+    <string name="buttonAnswer3" />
+    <string name="buttonAnswer4" />
+    <string name="questionsLeft" />
 </resources>

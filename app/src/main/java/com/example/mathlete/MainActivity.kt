@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.content.Intent
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -29,7 +30,8 @@ class MainActivity : AppCompatActivity() {
                 val centerSceneText: TextView = findViewById(R.id.centerText)
                 val buttonGenerator: Button = findViewById(R.id.buttonGenerator)
                 buttonGenerator.setOnClickListener {
-                    centerSceneText.text = "Generator zadanek potężny"
+                    val intent = Intent(this, QuizActivity::class.java)
+                    startActivity(intent)
                 }
                 val buttonLessons: Button = findViewById(R.id.buttonLessons)
                 buttonLessons.setOnClickListener {
