@@ -13,7 +13,6 @@ import com.example.mathlete.LinearGenerator
 import com.example.mathlete.QuestionGenerator
 import com.example.mathlete.QuizQuestion
 
-
 class QuizActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,7 +30,7 @@ class QuizActivity : AppCompatActivity() {
         val quizQuestion: QuizQuestion = generator.generateQuestion()
 
         questionText.text = quizQuestion.question
-        questionLeftText.text = "Questions left: $questionsLeft"
+        questionLeftText.text = "Pozostałe pytania: $questionsLeft"
 
 
         val buttonAnswer1: Button = findViewById(R.id.buttonAnswer1)

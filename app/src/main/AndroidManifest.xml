@@ -15,7 +15,8 @@
 
         <activity
             android:name=".QuizActivity"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
         </activity>
 
         <activity
