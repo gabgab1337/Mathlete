@@ -3,7 +3,7 @@ import kotlin.random.Random
 
 data class LinearFunction(val slope: Int = 0, val yIntercept: Int = 0)
 class LinearGenerator : QuestionGenerator{
-    val function: LinearFunction
+    private val function: LinearFunction
     init{
         function = generateFunction()
     }
@@ -13,16 +13,26 @@ class LinearGenerator : QuestionGenerator{
         val yIntercept = random.nextInt(10)
         return LinearFunction(slope, yIntercept)
     }
-    private fun calculateX() : Float{
-        return -function.yIntercept.toFloat() / function.slope
+    private fun calculateX() : String {
+        val result = -function.yIntercept.toFloat() / function.slope
+        return if (result % 1 == 0f) {
+            result.toInt().toString()
+        } else {
+            result.toString()
+        }
     }
-    private fun calculateWrongX() : Float{
+    private fun calculateWrongX() : String{
         val random = Random
         var change = 0
         while (change == 0) {
             change = random.nextInt(10) - 5
         }
-        return calculateX() + change
+        var result = calculateX().toFloat() + change
+        return if (result % 1 == 0f) {
+            result.toInt().toString()
+        } else {
+            result.toString()
+        }
     }
 
     override fun generateQuestion(): QuizQuestion {

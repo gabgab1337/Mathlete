@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import android.graphics.Color
+import android.os.CountDownTimer
 import android.os.Looper
 import android.os.Handler
 import androidx.activity.enableEdgeToEdge
@@ -22,28 +23,34 @@ class QuizActivity : AppCompatActivity() {
     private lateinit var buttonAnswer4: Button
     private lateinit var questionText: TextView
     private lateinit var questionLeftText: TextView
+    private lateinit var timer: CountDownTimer
+    private lateinit var timerTextView: TextView
     private var questionsLeft = 5
     private val generator: QuestionGenerator = LinearGenerator() // TODO: Dodać inne generatory
-    private val quizQuestion: QuizQuestion = generator.generateQuestion()
+    private var quizQuestion: QuizQuestion = generator.generateQuestion()
     private var correctAnswers = 0
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        supportActionBar?.hide()
+        val quizType = 0 // TODO: Dodać inne typy i obsługę typów quizów
+        enableEdgeToEdge()
         setContentView(R.layout.quiz_layout)
 
+        // UI elements
         buttonAnswer1 = findViewById(R.id.buttonAnswer1)
         buttonAnswer2 = findViewById(R.id.buttonAnswer2)
         buttonAnswer3 = findViewById(R.id.buttonAnswer3)
         buttonAnswer4 = findViewById(R.id.buttonAnswer4)
         questionText = findViewById(R.id.question)
         questionLeftText = findViewById(R.id.questionsLeft)
-
-        val quizType = 0 // TODO: Dodać inne typy i obsługę typów quizów
+        timerTextView = findViewById(R.id.timer)
 
         questionText.text = quizQuestion.question
         questionLeftText.text = "Pozostałe pytania: $questionsLeft"
 
+        // Buttony i handlery
         buttonAnswer1.text = quizQuestion.answers[0]
         buttonAnswer2.text = quizQuestion.answers[1]
         buttonAnswer3.text = quizQuestion.answers[2]
@@ -53,15 +60,28 @@ class QuizActivity : AppCompatActivity() {
         handleButtonClick(buttonAnswer3, 2)
         handleButtonClick(buttonAnswer4, 3)
 
-        // TODO: Zakańczanie quizu
+        // Timer
+        timer = object : CountDownTimer(300000, 1000) { // 300000 milliseconds = 5 minutes
+            override fun onTick(millisUntilFinished: Long) {
+                val minutes = millisUntilFinished / 1000 / 60
+                val seconds = millisUntilFinished / 1000 % 60
+                timerTextView.text = String.format("%02d:%02d", minutes, seconds)
+            }
+            override fun onFinish() {
+                questionText.text = "Koniec czsu!\n Poprawne odpowiedzi: $correctAnswers."
+                disableButtons()
+            }
+        }.start()
+
+        val closeButton: TextView = findViewById(R.id.closeButton)
+        closeButton.setOnClickListener {
+            finish()
+        }
     }
 
     private fun handleButtonClick(button: Button, answerIndex: Int) {
         button.setOnClickListener {
-            buttonAnswer1.isEnabled = false
-            buttonAnswer2.isEnabled = false
-            buttonAnswer3.isEnabled = false
-            buttonAnswer4.isEnabled = false
+            disableButtons()
 
             if (quizQuestion.correctAnswer == answerIndex) {
                 correctAnswers++
@@ -79,10 +99,7 @@ class QuizActivity : AppCompatActivity() {
 
             Handler(Looper.getMainLooper()).postDelayed({
                 generateNewQuestion()
-                buttonAnswer1.isEnabled = true
-                buttonAnswer2.isEnabled = true
-                buttonAnswer3.isEnabled = true
-                buttonAnswer4.isEnabled = true
+                enableButtons()
             }, 3000)
         }
     }
@@ -91,7 +108,7 @@ class QuizActivity : AppCompatActivity() {
     private fun generateNewQuestion() {
         if (questionsLeft > 0) {
             val generator: QuestionGenerator = LinearGenerator() // TODO: Dodać inne generatory
-            val quizQuestion: QuizQuestion = generator.generateQuestion()
+            quizQuestion = generator.generateQuestion()
 
             questionText.text = quizQuestion.question
             questionLeftText.text = "Pozostałe pytania: $questionsLeft"
@@ -106,11 +123,23 @@ class QuizActivity : AppCompatActivity() {
             buttonAnswer3.setBackgroundResource(R.drawable.button_background)
             buttonAnswer4.setBackgroundResource(R.drawable.button_background)
         } else {
+            timer.cancel()
             questionText.text = "Koniec! Poprawne odpowiedzi: $correctAnswers."
-            buttonAnswer1.isEnabled = false
-            buttonAnswer2.isEnabled = false
-            buttonAnswer3.isEnabled = false
-            buttonAnswer4.isEnabled = false
+            disableButtons()
         }
+    }
+
+    private fun disableButtons() {
+        buttonAnswer1.isEnabled = false
+        buttonAnswer2.isEnabled = false
+        buttonAnswer3.isEnabled = false
+        buttonAnswer4.isEnabled = false
+    }
+
+    private fun enableButtons() {
+        buttonAnswer1.isEnabled = true
+        buttonAnswer2.isEnabled = true
+        buttonAnswer3.isEnabled = true
+        buttonAnswer4.isEnabled = true
     }
 }
