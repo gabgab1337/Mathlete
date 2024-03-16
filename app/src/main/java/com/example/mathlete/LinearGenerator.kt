@@ -26,7 +26,7 @@ class LinearGenerator : QuestionGenerator{
     }
 
     override fun generateQuestion(): QuizQuestion {
-        val question = "Oblicz x dla ${function.slope}x + ${function.yIntercept} = 0"
+        val question = "Oblicz x \n${function.slope}x + ${function.yIntercept} = 0"
         val correctAnswer = calculateX().toString()
         val wrongAnswer1 = calculateWrongX().toString()
         val wrongAnswer2 = calculateWrongX().toString()
