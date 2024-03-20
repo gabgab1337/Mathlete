@@ -8,6 +8,7 @@ import android.graphics.Color
 import android.os.CountDownTimer
 import android.os.Looper
 import android.os.Handler
+import android.webkit.WebView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -25,18 +26,20 @@ class QuizActivity : AppCompatActivity() {
     private lateinit var questionLeftText: TextView
     private lateinit var timer: CountDownTimer
     private lateinit var timerTextView: TextView
+    private lateinit var expressionView: WebView
+
     private var questionsLeft = 5
     private val generator: QuestionGenerator = LinearGenerator() // TODO: Dodać inne generatory
     private var quizQuestion: QuizQuestion = generator.generateQuestion()
     private var correctAnswers = 0
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint("SetTextI18n", "SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportActionBar?.hide()
+        setContentView(R.layout.quiz_layout)
         val quizType = 0 // TODO: Dodać inne typy i obsługę typów quizów
         enableEdgeToEdge()
-        setContentView(R.layout.quiz_layout)
 
         // UI elements
         buttonAnswer1 = findViewById(R.id.buttonAnswer1)
@@ -46,6 +49,11 @@ class QuizActivity : AppCompatActivity() {
         questionText = findViewById(R.id.question)
         questionLeftText = findViewById(R.id.questionsLeft)
         timerTextView = findViewById(R.id.timer)
+        expressionView = findViewById(R.id.expression)
+        expressionView.settings.javaScriptEnabled = true
+        expressionView.setBackgroundColor(Color.TRANSPARENT)
+        expressionView.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null)
+        loadExpression()
 
         questionText.text = quizQuestion.question
         questionLeftText.text = "Pozostałe pytania: $questionsLeft"
@@ -107,11 +115,13 @@ class QuizActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     private fun generateNewQuestion() {
         if (questionsLeft > 0) {
-            val generator: QuestionGenerator = LinearGenerator() // TODO: Dodać inne generatory
+            val generator: QuestionGenerator = LinearGenerator()
             quizQuestion = generator.generateQuestion()
 
-            questionText.text = quizQuestion.question
             questionLeftText.text = "Pozostałe pytania: $questionsLeft"
+            questionText.text = quizQuestion.question
+
+            loadExpression()
 
             buttonAnswer1.text = quizQuestion.answers[0]
             buttonAnswer2.text = quizQuestion.answers[1]
@@ -141,5 +151,37 @@ class QuizActivity : AppCompatActivity() {
         buttonAnswer2.isEnabled = true
         buttonAnswer3.isEnabled = true
         buttonAnswer4.isEnabled = true
+    }
+
+    private fun loadExpression(){
+        val html = """
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <script type="text/javascript" async
+                        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+                    </script>
+                    <style>
+                        body{
+                            display: flex;
+                            justify-content: center;
+     
+                            font-size: 32px;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <script type="text/javascipt">
+                        MathJax.Hub.Config({
+                            tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+                        });
+                    </script>
+                    <p>
+                        $$${quizQuestion.expression}$$
+                    </p>
+                </body>
+                </html>
+            """.trimIndent() // TODO: Pobrać bibliotekę MathJax do projektu żeby to się szybciej ładowało
+        expressionView.loadDataWithBaseURL("https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/" ,html, "text/html", "utf-8", null)
     }
 }
