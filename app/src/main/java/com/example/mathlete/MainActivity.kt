@@ -25,7 +25,7 @@ import android.widget.TextView
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-                setContentView(R.layout.scene_changer_layout)
+                setContentView(R.layout.main_screen_layout)
                 val centerSceneText: TextView = findViewById(R.id.centerText)
                 val buttonGenerator: Button = findViewById(R.id.buttonGenerator)
                 buttonGenerator.setOnClickListener {
