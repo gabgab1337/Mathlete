@@ -8,6 +8,7 @@ import android.graphics.Color
 import android.os.CountDownTimer
 import android.os.Looper
 import android.os.Handler
+import android.view.View
 import android.webkit.WebView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -22,6 +23,7 @@ class QuizActivity : AppCompatActivity() {
     private lateinit var buttonAnswer2: Button
     private lateinit var buttonAnswer3: Button
     private lateinit var buttonAnswer4: Button
+    private lateinit var buttonExit: Button
     private lateinit var questionText: TextView
     private lateinit var questionLeftText: TextView
     private lateinit var timer: CountDownTimer
@@ -46,6 +48,7 @@ class QuizActivity : AppCompatActivity() {
         buttonAnswer2 = findViewById(R.id.buttonAnswer2)
         buttonAnswer3 = findViewById(R.id.buttonAnswer3)
         buttonAnswer4 = findViewById(R.id.buttonAnswer4)
+        buttonExit = findViewById(R.id.buttonExit)
         questionText = findViewById(R.id.question)
         questionLeftText = findViewById(R.id.questionsLeft)
         timerTextView = findViewById(R.id.timer)
@@ -76,10 +79,14 @@ class QuizActivity : AppCompatActivity() {
                 timerTextView.text = String.format("%02d:%02d", minutes, seconds)
             }
             override fun onFinish() {
-                questionText.text = "Koniec czsu!\n Poprawne odpowiedzi: $correctAnswers."
-                disableButtons()
+                questionText.text = "\n\n\n\nKoniec czasu!\n Poprawne odpowiedzi: $correctAnswers."
+                endQuiz()
             }
         }.start()
+
+        buttonExit.setOnClickListener {
+            finish()
+        }
 
         val closeButton: TextView = findViewById(R.id.closeButton)
         closeButton.setOnClickListener {
@@ -134,8 +141,8 @@ class QuizActivity : AppCompatActivity() {
             buttonAnswer4.setBackgroundResource(R.drawable.button_background)
         } else {
             timer.cancel()
-            questionText.text = "Koniec! Poprawne odpowiedzi: $correctAnswers."
-            disableButtons()
+            questionText.text = "\n\n\n\nKoniec!\nPoprawne odpowiedzi: $correctAnswers."
+            endQuiz()
         }
     }
 
@@ -155,33 +162,61 @@ class QuizActivity : AppCompatActivity() {
 
     private fun loadExpression(){
         val html = """
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <script type="text/javascript" async
-                        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
-                    </script>
-                    <style>
-                        body{
-                            display: flex;
-                            justify-content: center;
-     
-                            font-size: 32px;
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <script type="text/javascript" async
+                    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-chtml-full.min.js">
+                </script>
+                <script type="text/javascript">
+                    MathJax = {
+                        tex: {
+                            inlineMath: [['$', '$'], ['\\(', '\\)']]
+                        },
+                        options: {
+                            skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+                        },
+                        startup: {
+                            ready: () => {
+                                MathJax.startup.defaultReady();
+                                MathJax.startup.promise.then(() => {
+                                    console.log('MathJax initial typesetting complete');
+                                });
+                            },
+                            displayErrors: false,
+                            displayMessages: false
                         }
-                    </style>
-                </head>
-                <body>
-                    <script type="text/javascipt">
-                        MathJax.Hub.Config({
-                            tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
-                        });
-                    </script>
-                    <p>
-                        $$${quizQuestion.expression}$$
-                    </p>
-                </body>
-                </html>
-            """.trimIndent() // TODO: Pobrać bibliotekę MathJax do projektu żeby to się szybciej ładowało
-        expressionView.loadDataWithBaseURL("https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/" ,html, "text/html", "utf-8", null)
+                    };
+                </script>
+                <style>
+                    body{
+                        display: flex;
+                        justify-content: center;
+
+                        font-size: 32px;
+                    }
+                </style>
+            </head>
+            <body>
+                <p>
+                    $$${quizQuestion.expression}$$
+                </p>
+            </body>
+            </html>
+        """.trimIndent()
+        expressionView.loadDataWithBaseURL("https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/" ,html, "text/html", "utf-8", null)
+    }
+
+    private fun endQuiz() {
+        // Hide answer buttons
+        buttonAnswer1.visibility = View.GONE
+        buttonAnswer2.visibility = View.GONE
+        buttonAnswer3.visibility = View.GONE
+        buttonAnswer4.visibility = View.GONE
+        questionLeftText.visibility = View.GONE
+        expressionView.visibility = View.GONE
+
+        // Show restart and exit buttons
+        buttonExit.visibility = View.VISIBLE
     }
 }
