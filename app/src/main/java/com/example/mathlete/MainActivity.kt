@@ -19,7 +19,6 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.example.mathlete.ui.theme.MathleteTheme
 import androidx.appcompat.app.AppCompatActivity
-import com.example.mathlete.R
 import android.widget.Button
 import android.widget.TextView
 
@@ -41,5 +40,5 @@ class MainActivity : AppCompatActivity() {
                 buttonProgress.setOnClickListener {
                     centerSceneText.text = "Progressik"
                 }
-            }
-        }
+    }
+}
