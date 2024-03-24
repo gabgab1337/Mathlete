@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "8614619212",
+    "project_id": "mathlete-418214",
+    "storage_bucket": "mathlete-418214.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:8614619212:android:dd7538095b429a0676ace9",
+        "android_client_info": {
+          "package_name": "com.broszke.mathlete"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "8614619212-211g6pfqgluvg4gpm2t3iibtoj5uobjb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.broszke.mathlete",
+            "certificate_hash": "6ec818fdcb577b4e70c4b161201ee4896c7500fc"
+          }
+        },
+        {
+          "client_id": "8614619212-2gbu93k65dek7uldslvpmnimjmui3jlg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQlG1YwQijM7SNV-N5hmCC_RQdijIAxCQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "8614619212-2gbu93k65dek7uldslvpmnimjmui3jlg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
