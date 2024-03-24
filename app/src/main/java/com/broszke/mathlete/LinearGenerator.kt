@@ -1,4 +1,4 @@
-package com.example.mathlete
+package com.broszke.mathlete
 import kotlin.random.Random
 
 data class LinearFunction(val slope: Int = 0, val yIntercept: Int = 0)

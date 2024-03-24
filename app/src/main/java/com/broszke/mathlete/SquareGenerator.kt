@@ -1,4 +1,4 @@
-package com.example.mathlete
+package com.broszke.mathlete
 import kotlin.random.Random
 
 data class SquareFunction(val a: Int = 0, val b: Int = 0, val c: Int = 0)

@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.mathlete"
+    namespace = "com.broszke.mathlete"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.mathlete"
+        applicationId = "com.broszke.mathlete"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
