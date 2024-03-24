@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <Button
+        android:id="@+id/buttonLinearGenerator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/buttonLinearGenerator"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/buttonQuadraticGenerator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/buttonQuadraticGenerator"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/button3Generator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/button3Generator"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/button4Generator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/button4Generator"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/button5Generator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/button5Generator"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/button6Generator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/button6Generator"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/button7Generator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/button7Generator"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/button8Generator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/button8Generator"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/button9Generator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/button9Generator"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/button10Generator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/button10Generator"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/button11Generator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/button11Generator"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/button12Generator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/button12Generator"
+        android:visibility="gone" />
+</LinearLayout>
