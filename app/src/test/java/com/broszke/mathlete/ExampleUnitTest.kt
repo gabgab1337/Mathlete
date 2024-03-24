@@ -1,4 +1,4 @@
-package com.example.mathlete
+package com.broszke.mathlete
 
 import org.junit.Test
 

@@ -1,14 +1,16 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    id("com.google.gms.google-services")
+
 }
 
 android {
-    namespace = "com.example.mathlete"
+    namespace = "com.broszke.mathlete"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.mathlete"
+        applicationId = "com.broszke.mathlete"
         minSdk = 24
         targetSdk = 34
         versionCode = 1

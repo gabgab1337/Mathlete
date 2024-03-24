@@ -1,4 +1,4 @@
-package com.example.mathlete.ui.theme
+package com.broszke.mathlete.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

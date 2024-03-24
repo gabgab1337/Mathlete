@@ -1,4 +1,4 @@
-package com.example.mathlete
+package com.broszke.mathlete
 
 data class QuizQuestion(
     val question: String,
