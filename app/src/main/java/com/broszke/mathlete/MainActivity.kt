@@ -14,16 +14,6 @@ class MainActivity : AppCompatActivity() {
                 val centerSceneText: TextView = findViewById(R.id.centerText)
                 centerSceneText.text = "Witaj w Mathlete!"
 
-                val buttonLessons: Button = findViewById(R.id.buttonLessons)
-                buttonLessons.setOnClickListener {
-                    centerSceneText.text = "Lekcje tutaj o"
-                }
-
-                val buttonProgress: Button = findViewById(R.id.buttonProgress)
-                buttonProgress.setOnClickListener {
-                    centerSceneText.text = "Progressik"
-                }
-
                 // Generator buttony
                 val buttonIds = arrayOf(
                     R.id.buttonLinearGenerator,
@@ -40,14 +30,34 @@ class MainActivity : AppCompatActivity() {
                     R.id.button12Generator
                 )
 
-                val buttons = buttonIds.map { findViewById<Button>(it) }
+                val generatorButtons = buttonIds.map { findViewById<Button>(it) }
+
+                val buttonLessons: Button = findViewById(R.id.buttonLessons)
+                buttonLessons.setOnClickListener {
+                    centerSceneText.visibility = View.VISIBLE
+                    generatorButtons.forEach { it.visibility = View.GONE }
+                    centerSceneText.text = "Lekcje tutaj o"
+                }
+
+                val buttonProgress: Button = findViewById(R.id.buttonProgress)
+                buttonProgress.setOnClickListener {
+                    centerSceneText.visibility = View.VISIBLE
+                    generatorButtons.forEach { it.visibility = View.GONE }
+                    centerSceneText.text = "Progressik"
+                }
 
                 val buttonGenerator: Button = findViewById(R.id.buttonGenerator)
                 buttonGenerator.setOnClickListener {
                     centerSceneText.visibility = View.GONE
-                    buttons.forEach { it.visibility = View.VISIBLE }
-                    //val intent = Intent(this, QuizActivity::class.java)
-                    //startActivity(intent)
+                    generatorButtons.forEach { it.visibility = View.VISIBLE }
+                }
+
+                generatorButtons.forEachIndexed { index, button ->
+                    button.setOnClickListener {
+                        val intent = Intent(this, QuizActivity::class.java)
+                        intent.putExtra("generatorType", index)
+                        startActivity(intent)
+                    }
                 }
     }
 }

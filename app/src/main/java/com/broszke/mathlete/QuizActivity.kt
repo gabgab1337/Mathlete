@@ -25,6 +25,7 @@ class QuizActivity : AppCompatActivity() {
     private lateinit var timerTextView: TextView
     private lateinit var expressionView: WebView
 
+    private val generatorType = intent.getIntExtra("generatorType", 0) // TODO: Dodać inne typy i obsługę typów quizów
     private var questionsLeft = 5
     private val generator: QuestionGenerator = LinearGenerator() // TODO: Dodać inne generatory
     private var quizQuestion: QuizQuestion = generator.generateQuestion()
@@ -35,7 +36,6 @@ class QuizActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         supportActionBar?.hide()
         setContentView(R.layout.quiz_layout)
-        val quizType = 0 // TODO: Dodać inne typy i obsługę typów quizów
         enableEdgeToEdge()
 
         // UI elements
