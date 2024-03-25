@@ -5,6 +5,7 @@
     <string name="buttonProgress">Postępy</string>
     <string name="buttonLessons">Lekcje</string>
     <string name="buttonGenerator">Generator</string>
+    <string name="buttonLogin">Zaloguj sie</string>
     <string name="timer" />
     <string name="question" />
     <string name="buttonAnswer1" />
