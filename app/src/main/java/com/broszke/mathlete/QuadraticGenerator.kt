@@ -1,18 +1,18 @@
 package com.broszke.mathlete
 import kotlin.random.Random
 
-data class SquareFunction(val a: Int = 0, val b: Int = 0, val c: Int = 0)
-class SquareGenerator : QuestionGenerator{
-    private val function: SquareFunction
+data class QuadraticFunction(val a: Int = 0, val b: Int = 0, val c: Int = 0)
+class QuadraticGenerator : QuestionGenerator{
+    private val function: QuadraticFunction
     init{
         function = generateFunction()
     }
-    private fun generateFunction(): SquareFunction {
+    private fun generateFunction(): QuadraticFunction {
         val random = Random
         val a = random.nextInt(10) + 1
         val b = random.nextInt(10) - 5
         val c = random.nextInt(20) - 10
-        return SquareFunction(a, b, c)
+        return QuadraticFunction(a, b, c)
     }
     private fun calculateX(equals: Int = 0) : String {
         val a = function.a.toFloat()
@@ -41,7 +41,7 @@ class SquareGenerator : QuestionGenerator{
         val question = "Oblicz miejsca zerowe dla:\n"
         val random = Random
         val equals = random.nextInt(20) - 10
-        val expression = "${function.a}x/{2) + ${function.b}x + ${function.b} = $equals"
+        val expression = "${function.a}x/{2} + ${function.b}x + ${function.b} = $equals"
         val correctAnswer = calculateX(equals)
         var wrongAnswer1 = calculateWrongX()
         val wrongAnswer2 = calculateWrongX()

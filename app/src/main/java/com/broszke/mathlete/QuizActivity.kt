@@ -25,10 +25,21 @@ class QuizActivity : AppCompatActivity() {
     private lateinit var timerTextView: TextView
     private lateinit var expressionView: WebView
 
+    private var generatorType: Int = 0
+    private lateinit var generatorsArray: Array<QuestionGenerator>
+    private lateinit var generator: QuestionGenerator
+    private lateinit var quizQuestion: QuizQuestion
+    /*
     private val generatorType = intent.getIntExtra("generatorType", 0) // TODO: Dodać inne typy i obsługę typów quizów
-    private var questionsLeft = 5
-    private val generator: QuestionGenerator = LinearGenerator() // TODO: Dodać inne generatory
+
+    private val generatorsArray = arrayOf(
+        LinearGenerator(),
+        QuadraticGenerator())
+
+    private val generator: QuestionGenerator = generatorsArray[generatorType] // TODO: Dodać inne generatory
     private var quizQuestion: QuizQuestion = generator.generateQuestion()
+    */
+    private var questionsLeft = 5
     private var correctAnswers = 0
 
     @SuppressLint("SetTextI18n", "SetJavaScriptEnabled")
@@ -37,6 +48,14 @@ class QuizActivity : AppCompatActivity() {
         supportActionBar?.hide()
         setContentView(R.layout.quiz_layout)
         enableEdgeToEdge()
+
+        generatorType = intent.getIntExtra("generatorType", 0)
+        generatorsArray = arrayOf(
+            LinearGenerator(),
+            QuadraticGenerator())
+        generator = generatorsArray[generatorType] // TODO: Dodać inne generatory
+        quizQuestion = generator.generateQuestion()
+
 
         // UI elements
         buttonAnswer1 = findViewById(R.id.buttonAnswer1)
@@ -117,7 +136,7 @@ class QuizActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     private fun generateNewQuestion() {
         if (questionsLeft > 0) {
-            val generator: QuestionGenerator = LinearGenerator()
+            val generator: QuestionGenerator = generatorsArray[generatorType]
             quizQuestion = generator.generateQuestion()
 
             questionLeftText.text = "Pozostałe pytania: $questionsLeft"
@@ -188,7 +207,7 @@ class QuizActivity : AppCompatActivity() {
                         display: flex;
                         justify-content: center;
 
-                        font-size: 32px;
+                        font-size: 28px;
                     }
                 </style>
             </head>
