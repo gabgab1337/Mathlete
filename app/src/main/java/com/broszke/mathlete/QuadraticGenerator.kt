@@ -3,7 +3,7 @@ import kotlin.random.Random
 
 data class QuadraticFunction(val a: Int = 0, val b: Int = 0, val c: Int = 0)
 class QuadraticGenerator : QuestionGenerator{
-    private val function: QuadraticFunction
+    private var function: QuadraticFunction
     init{
         function = generateFunction()
     }
@@ -38,10 +38,11 @@ class QuadraticGenerator : QuestionGenerator{
     }
 
     override fun generateQuestion(): QuizQuestion {
+        function = generateFunction()
         val question = "Oblicz miejsca zerowe dla:\n"
         val random = Random
         val equals = random.nextInt(20) - 10
-        val expression = "${function.a}x/{2} + ${function.b}x + ${function.b} = $equals"
+        val expression = "${function.a}{x}^2 + ${function.b}x + ${function.b} = $equals"
         val correctAnswer = calculateX(equals)
         var wrongAnswer1 = calculateWrongX()
         val wrongAnswer2 = calculateWrongX()

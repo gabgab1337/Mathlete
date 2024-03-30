@@ -29,16 +29,6 @@ class QuizActivity : AppCompatActivity() {
     private lateinit var generatorsArray: Array<QuestionGenerator>
     private lateinit var generator: QuestionGenerator
     private lateinit var quizQuestion: QuizQuestion
-    /*
-    private val generatorType = intent.getIntExtra("generatorType", 0) // TODO: Dodać inne typy i obsługę typów quizów
-
-    private val generatorsArray = arrayOf(
-        LinearGenerator(),
-        QuadraticGenerator())
-
-    private val generator: QuestionGenerator = generatorsArray[generatorType] // TODO: Dodać inne generatory
-    private var quizQuestion: QuizQuestion = generator.generateQuestion()
-    */
     private var questionsLeft = 5
     private var correctAnswers = 0
 

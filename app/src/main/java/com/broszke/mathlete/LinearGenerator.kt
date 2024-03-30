@@ -3,13 +3,13 @@ import kotlin.random.Random
 
 data class LinearFunction(val slope: Int = 0, val yIntercept: Int = 0)
 class LinearGenerator : QuestionGenerator{
-    private val function: LinearFunction
+    private var function: LinearFunction
     init{
         function = generateFunction()
     }
     private fun generateFunction(): LinearFunction {
         val random = Random
-        val slope = random.nextInt(10) + 1 // Avoid zero slope
+        val slope = random.nextInt(10) + 1
         val yIntercept = random.nextInt(10)
         return LinearFunction(slope, yIntercept)
     }
@@ -36,6 +36,7 @@ class LinearGenerator : QuestionGenerator{
     }
 
     override fun generateQuestion(): QuizQuestion {
+        function = generateFunction()
         val question = "Oblicz x dla:\n"
         val random = Random
         val equals = random.nextInt(20) - 10
