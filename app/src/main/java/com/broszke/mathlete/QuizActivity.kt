@@ -170,7 +170,7 @@ class QuizActivity : AppCompatActivity() {
             <html>
             <head>
                 <script type="text/javascript" async
-                    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-chtml-full.min.js">
+                    src="file:///android_asset/MathJax/es5/tex-chtml-full.js">
                 </script>
                 <script type="text/javascript">
                     MathJax = {
@@ -208,7 +208,7 @@ class QuizActivity : AppCompatActivity() {
             </body>
             </html>
         """.trimIndent()
-        expressionView.loadDataWithBaseURL("https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/" ,html, "text/html", "utf-8", null)
+        expressionView.loadDataWithBaseURL("file:///android_asset/" ,html, "text/html", "utf-8", null)
     }
 
     private fun endQuiz() {
