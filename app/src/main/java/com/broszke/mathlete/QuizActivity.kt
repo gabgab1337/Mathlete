@@ -8,16 +8,18 @@ import android.graphics.Color
 import android.os.CountDownTimer
 import android.os.Looper
 import android.os.Handler
+import android.view.MotionEvent
 import android.view.View
 import android.webkit.WebView
+import android.widget.FrameLayout
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 
 class QuizActivity : AppCompatActivity() {
-    private lateinit var buttonAnswer1: Button
-    private lateinit var buttonAnswer2: Button
-    private lateinit var buttonAnswer3: Button
-    private lateinit var buttonAnswer4: Button
+    private lateinit var buttonAnswer1: WebView
+    private lateinit var buttonAnswer2: WebView
+    private lateinit var buttonAnswer3: WebView
+    private lateinit var buttonAnswer4: WebView
     private lateinit var buttonExit: Button
     private lateinit var questionText: TextView
     private lateinit var questionLeftText: TextView
@@ -46,12 +48,11 @@ class QuizActivity : AppCompatActivity() {
         generator = generatorsArray[generatorType] // TODO: Dodać inne generatory
         quizQuestion = generator.generateQuestion()
 
-
         // UI elements
-        buttonAnswer1 = findViewById(R.id.buttonAnswer1)
-        buttonAnswer2 = findViewById(R.id.buttonAnswer2)
-        buttonAnswer3 = findViewById(R.id.buttonAnswer3)
-        buttonAnswer4 = findViewById(R.id.buttonAnswer4)
+        buttonAnswer1 = findViewById<FrameLayout>(R.id.buttonAnswer1).findViewById(R.id.webViewButton)
+        buttonAnswer2 = findViewById<FrameLayout>(R.id.buttonAnswer2).findViewById(R.id.webViewButton)
+        buttonAnswer3 = findViewById<FrameLayout>(R.id.buttonAnswer3).findViewById(R.id.webViewButton)
+        buttonAnswer4 = findViewById<FrameLayout>(R.id.buttonAnswer4).findViewById(R.id.webViewButton)
         buttonExit = findViewById(R.id.buttonExit)
         questionText = findViewById(R.id.question)
         questionLeftText = findViewById(R.id.questionsLeft)
@@ -62,18 +63,28 @@ class QuizActivity : AppCompatActivity() {
         expressionView.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null)
         loadExpression()
 
+        // Disable WebView's built-in click handling
+        buttonAnswer1.isClickable = false
+        buttonAnswer1.isFocusable = false
+        buttonAnswer2.isClickable = false
+        buttonAnswer2.isFocusable = false
+        buttonAnswer3.isClickable = false
+        buttonAnswer3.isFocusable = false
+        buttonAnswer4.isClickable = false
+        buttonAnswer4.isFocusable = false
+
         questionText.text = quizQuestion.question
         questionLeftText.text = "Pozostałe pytania: $questionsLeft"
 
         // Buttony i handlery
-        buttonAnswer1.text = quizQuestion.answers[0]
-        buttonAnswer2.text = quizQuestion.answers[1]
-        buttonAnswer3.text = quizQuestion.answers[2]
-        buttonAnswer4.text = quizQuestion.answers[3]
-        handleButtonClick(buttonAnswer1, 0)
-        handleButtonClick(buttonAnswer2, 1)
-        handleButtonClick(buttonAnswer3, 2)
-        handleButtonClick(buttonAnswer4, 3)
+        loadAnswerIntoWebView(buttonAnswer1, quizQuestion.answers[0])
+        loadAnswerIntoWebView(buttonAnswer2, quizQuestion.answers[1])
+        loadAnswerIntoWebView(buttonAnswer3, quizQuestion.answers[2])
+        loadAnswerIntoWebView(buttonAnswer4, quizQuestion.answers[3])
+        handleWebViewClick(buttonAnswer1, 0)
+        handleWebViewClick(buttonAnswer2, 1)
+        handleWebViewClick(buttonAnswer3, 2)
+        handleWebViewClick(buttonAnswer4, 3)
 
         // Timer
         timer = object : CountDownTimer(300000, 1000) { // 300000 milliseconds = 5 minutes
@@ -98,28 +109,34 @@ class QuizActivity : AppCompatActivity() {
         }
     }
 
-    private fun handleButtonClick(button: Button, answerIndex: Int) {
-        button.setOnClickListener {
-            disableButtons()
+    @SuppressLint("ClickableViewAccessibility")
+    private fun handleWebViewClick(webView: WebView, answerIndex: Int) {
+        webView.setOnTouchListener { v, event ->
+            if (event.action == MotionEvent.ACTION_UP) {
+                v.performClick() // Call performClick when a click is detected
 
-            if (quizQuestion.correctAnswer == answerIndex) {
-                correctAnswers++
-                button.setBackgroundResource(R.drawable.button_correct_background)
-            } else {
-                button.setBackgroundResource(R.drawable.button_wrong_background)
-                when (quizQuestion.correctAnswer) {
-                    0 -> buttonAnswer1.setBackgroundResource(R.drawable.button_correct_background)
-                    1 -> buttonAnswer2.setBackgroundResource(R.drawable.button_correct_background)
-                    2 -> buttonAnswer3.setBackgroundResource(R.drawable.button_correct_background)
-                    3 -> buttonAnswer4.setBackgroundResource(R.drawable.button_correct_background)
+                disableWebViews()
+
+                if (quizQuestion.correctAnswer == answerIndex) {
+                    correctAnswers++
+                    webView.setBackgroundResource(R.drawable.button_correct_background)
+                } else {
+                    webView.setBackgroundResource(R.drawable.button_wrong_background)
+                    when (quizQuestion.correctAnswer) {
+                        0 -> buttonAnswer1.setBackgroundResource(R.drawable.button_correct_background)
+                        1 -> buttonAnswer2.setBackgroundResource(R.drawable.button_correct_background)
+                        2 -> buttonAnswer3.setBackgroundResource(R.drawable.button_correct_background)
+                        3 -> buttonAnswer4.setBackgroundResource(R.drawable.button_correct_background)
+                    }
                 }
-            }
-            questionsLeft -= 1
+                questionsLeft -= 1
 
-            Handler(Looper.getMainLooper()).postDelayed({
-                generateNewQuestion()
-                enableButtons()
-            }, 3000)
+                Handler(Looper.getMainLooper()).postDelayed({
+                    generateNewQuestion()
+                    enableWebViews()
+                }, 3000)
+            }
+            true
         }
     }
 
@@ -134,10 +151,10 @@ class QuizActivity : AppCompatActivity() {
 
             loadExpression()
 
-            buttonAnswer1.text = quizQuestion.answers[0]
-            buttonAnswer2.text = quizQuestion.answers[1]
-            buttonAnswer3.text = quizQuestion.answers[2]
-            buttonAnswer4.text = quizQuestion.answers[3]
+            loadAnswerIntoWebView(buttonAnswer1, quizQuestion.answers[0])
+            loadAnswerIntoWebView(buttonAnswer2, quizQuestion.answers[1])
+            loadAnswerIntoWebView(buttonAnswer3, quizQuestion.answers[2])
+            loadAnswerIntoWebView(buttonAnswer4, quizQuestion.answers[3])
 
             buttonAnswer1.setBackgroundResource(R.drawable.button_background)
             buttonAnswer2.setBackgroundResource(R.drawable.button_background)
@@ -150,14 +167,14 @@ class QuizActivity : AppCompatActivity() {
         }
     }
 
-    private fun disableButtons() {
+    private fun disableWebViews() {
         buttonAnswer1.isEnabled = false
         buttonAnswer2.isEnabled = false
         buttonAnswer3.isEnabled = false
         buttonAnswer4.isEnabled = false
     }
 
-    private fun enableButtons() {
+    private fun enableWebViews() {
         buttonAnswer1.isEnabled = true
         buttonAnswer2.isEnabled = true
         buttonAnswer3.isEnabled = true
@@ -187,8 +204,8 @@ class QuizActivity : AppCompatActivity() {
                                     console.log('MathJax initial typesetting complete');
                                 });
                             },
-                            displayErrors: false,
-                            displayMessages: false
+                            displayErrors: true,
+                            displayMessages: true
                         }
                     };
                 </script>
@@ -209,6 +226,54 @@ class QuizActivity : AppCompatActivity() {
             </html>
         """.trimIndent()
         expressionView.loadDataWithBaseURL("file:///android_asset/" ,html, "text/html", "utf-8", null)
+    }
+
+    @SuppressLint("SetJavaScriptEnabled")
+    private fun loadAnswerIntoWebView(webView: WebView, answer: String) {
+        webView.settings.javaScriptEnabled = true
+        val html = """
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <script type="text/javascript" async
+                    src="file:///android_asset/MathJax/es5/tex-chtml-full.js">
+                </script>
+                <script type="text/javascript">
+                    MathJax = {
+                        tex: {
+                            inlineMath: [['$', '$'], ['\\(', '\\)']]
+                        },
+                        options: {
+                            skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+                        },
+                        startup: {
+                            ready: () => {
+                                MathJax.startup.defaultReady();
+                                MathJax.startup.promise.then(() => {
+                                    console.log('MathJax initial typesetting complete');
+                                });
+                            },
+                            displayErrors: true,
+                            displayMessages: true
+                        }
+                    };
+                </script>
+                <style>
+                    body{
+                        display: flex;
+                        justify-content: center;
+                        font-size: 14px;
+                    }
+                </style>
+            </head>
+            <body>
+                <p>
+                    $$${answer}$$
+                </p>
+            </body>
+            </html>
+        """.trimIndent()
+        webView.loadDataWithBaseURL("file:///android_asset/" ,html, "text/html", "utf-8", null)
     }
 
     private fun endQuiz() {

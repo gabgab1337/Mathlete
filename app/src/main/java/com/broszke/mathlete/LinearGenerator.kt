@@ -17,8 +17,6 @@ class LinearGenerator : QuestionGenerator{
         val result = (equals - function.yIntercept.toFloat()) / function.slope
         return if (result % 1 == 0f) {
             result.toInt().toString()
-        } else if (isPeriodicFraction(result.toString())) {
-            getPeriodicPart(result.toInt(), 1)
         } else {
             result.toString()
         }
@@ -32,8 +30,6 @@ class LinearGenerator : QuestionGenerator{
         val result = calculateX(equals).toFloat() + change
         return if (result % 1 == 0f) {
             result.toInt().toString()
-        } else if (isPeriodicFraction(result.toString())) {
-            getPeriodicPart(result.toInt(), 1)
         } else {
             result.toString()
         }
@@ -77,44 +73,26 @@ class LinearGenerator : QuestionGenerator{
         return QuizQuestion(question, expression, answers, correctAnswerIndex)
     }
 
-    private fun isPeriodicFraction(number: String): Boolean {
-        val parts = number.split(".")
-        if (parts.size != 2) return false
-
-        val decimalPart = parts[1]
-        for (length in 1..decimalPart.length / 2) {
-            val pattern = decimalPart.substring(0, length)
-            var isPeriodic = true
-            for (i in length until decimalPart.length step length) {
-                if (i + length > decimalPart.length || decimalPart.substring(i, i + length) != pattern) {
-                    isPeriodic = false
-                    break
-                }
-            }
-            if (isPeriodic) return true
+    private fun calculateFraction(a: Int, b: Int): String {
+        val divisor = GCD(a, b)
+        var nominator = a / divisor
+        var denominator = b / divisor
+        if (denominator < 0) {
+            nominator *= -1
+            denominator *= -1
         }
-        return false
+        return if (nominator % denominator == 0) {
+            (nominator / denominator).toString()
+        } else {
+            "\u000crac{$nominator}{$denominator}"
+        }
     }
 
-    private fun getPeriodicPart(numerator: Int, denominator: Int): String {
-        val integerPart = numerator / denominator
-        var remainder = numerator % denominator
-        val decimalPart = StringBuilder()
-        val remainders = mutableMapOf<Int, Int>()
-
-        while (remainder != 0 && !remainders.containsKey(remainder)) {
-            remainders[remainder] = decimalPart.length
-            remainder *= 10
-            val decimalPlace = remainder / denominator
-            decimalPart.append(decimalPlace)
-            remainder %= denominator
-        }
-
-        return if (remainder != 0) {
-            val begin = remainders[remainder]!!
-            decimalPart.insert(begin, "(").append(")").toString()
+    private fun GCD(a: Int, b: Int): Int {
+        return if (b == 0) {
+            a
         } else {
-            decimalPart.toString()
+            GCD(b, a % b)
         }
     }
 
