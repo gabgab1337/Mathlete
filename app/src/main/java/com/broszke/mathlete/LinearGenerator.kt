@@ -14,12 +14,7 @@ class LinearGenerator : QuestionGenerator{
         return LinearFunction(slope, yIntercept)
     }
     private fun calculateX(equals: Int = 0) : String {
-        val result = (equals - function.yIntercept.toFloat()) / function.slope
-        return if (result % 1 == 0f) {
-            result.toInt().toString()
-        } else {
-            result.toString()
-        }
+        return calculateFraction(equals - function.yIntercept, function.slope)
     }
     private fun calculateWrongX(equals: Int = 0) : String{
         val random = Random
@@ -27,12 +22,7 @@ class LinearGenerator : QuestionGenerator{
         while (change == 0) {
             change = random.nextInt(10) - 10
         }
-        val result = calculateX(equals).toFloat() + change
-        return if (result % 1 == 0f) {
-            result.toInt().toString()
-        } else {
-            result.toString()
-        }
+        return calculateFraction((equals - function.yIntercept + change), function.slope)
     }
 
     override fun generateQuestion(): QuizQuestion {
@@ -58,15 +48,15 @@ class LinearGenerator : QuestionGenerator{
         }else{
             " = $equals"
         }
-        val correctAnswer = calculateX(equals).toString()
-        var wrongAnswer1 = calculateWrongX(equals).toString()
-        val wrongAnswer2 = calculateWrongX(equals).toString()
-        var wrongAnswer3 = calculateWrongX(equals).toString()
+        val correctAnswer = calculateX(equals)
+        var wrongAnswer1 = calculateWrongX(equals)
+        val wrongAnswer2 = calculateWrongX(equals)
+        var wrongAnswer3 = calculateWrongX(equals)
         while (wrongAnswer1 == wrongAnswer2) {
-            wrongAnswer1 = calculateWrongX(equals).toString()
+            wrongAnswer1 = calculateWrongX(equals)
         }
         while (wrongAnswer3 == wrongAnswer1 || wrongAnswer3 == wrongAnswer2) {
-            wrongAnswer3 = calculateWrongX(equals).toString()
+            wrongAnswer3 = calculateWrongX(equals)
         }
         val answers = listOf(correctAnswer, wrongAnswer1, wrongAnswer2, wrongAnswer3).shuffled()
         val correctAnswerIndex = answers.indexOf(correctAnswer)
@@ -74,25 +64,45 @@ class LinearGenerator : QuestionGenerator{
     }
 
     private fun calculateFraction(a: Int, b: Int): String {
-        val divisor = GCD(a, b)
-        var nominator = a / divisor
-        var denominator = b / divisor
+        if (b == 0) {
+            throw IllegalArgumentException("Denominator cannot be zero.")
+        }
+        var sign = ""
+        var nominator = a
+        var denominator = b
         if (denominator < 0) {
             nominator *= -1
             denominator *= -1
         }
+        if (nominator < 0) {
+            nominator *= -1
+            sign += "-"
+        }
         return if (nominator % denominator == 0) {
-            (nominator / denominator).toString()
+            sign + (nominator / denominator).toString()
         } else {
-            "\u000crac{$nominator}{$denominator}"
+            val divisor = gcd(nominator, denominator)
+            nominator /= divisor
+            denominator /= divisor
+            formatFraction(sign, nominator, denominator)
         }
     }
 
-    private fun GCD(a: Int, b: Int): Int {
+    private fun formatFraction(sign: String, nominator: Int, denominator: Int): String {
+        return if (nominator % denominator == 0) {
+            "$sign${nominator / denominator}"
+        } else if (nominator / denominator == 0) {
+            "$sign\\frac{$nominator}{$denominator}"
+        } else {
+            "$sign${nominator/denominator}\\frac{${nominator % denominator}}{$denominator}"
+        }
+    }
+
+    private fun gcd(a: Int, b: Int): Int {
         return if (b == 0) {
             a
         } else {
-            GCD(b, a % b)
+            gcd(b, a % b)
         }
     }
 
