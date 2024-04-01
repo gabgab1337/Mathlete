@@ -1,5 +1,7 @@
 package com.broszke.mathlete
+import kotlin.math.sqrt
 import kotlin.random.Random
+import com.broszke.mathlete.calculateFraction
 
 data class QuadraticFunction(val a: Int = 0, val b: Int = 0, val c: Int = 0)
 class QuadraticGenerator : QuestionGenerator{
@@ -9,26 +11,37 @@ class QuadraticGenerator : QuestionGenerator{
     }
     private fun generateFunction(): QuadraticFunction {
         val random = Random
-        val a = random.nextInt(10) + 1
-        val b = random.nextInt(10) - 5
-        val c = random.nextInt(20) - 10
+        var a: Int
+        var b: Int
+        var c: Int
+        var delta: Int
+        val deltaOption = random.nextInt(7)
+        do {
+            a = random.nextInt(10) + 1
+            b = random.nextInt(20) - 10
+            delta = when (deltaOption) {
+                0 -> b * b + random.nextInt(1, 10) // delta positive
+                1 -> 0 // delta zero
+                else -> b * b //delta nehative
+            }
+            c = (b * b - delta) / (4 * a)
+        } while ((b * b - 4 * a * c) != delta || a * c == 0)
         return QuadraticFunction(a, b, c)
     }
     private fun calculateX(equals: Int = 0) : String {
-        val a = function.a.toFloat()
-        val b = function.b.toFloat()
-        val c = function.c.toFloat() - equals
+        val a = function.a
+        val b = function.b
+        val c = function.c - equals
         val delta = b * b - 4 * a * c
         if (delta < 0f) {
-            return "Brak miejsc zerowych"
+            return "\\text{Brak miejsc zerowych}"
         }
-        else if (delta == 0f) {
-            val x = (-b / (2 * a)).toString()
-            return "x = $x"
+        else if (delta == 0) {
+            return "x = ${calculateFraction((-b), (2 * a))}"
         }
-        val x1 = ((-b + Math.sqrt(delta.toDouble())) / (2 * a)).toString()
-        val x2 = ((-b - Math.sqrt(delta.toDouble())) / (2 * a)).toString()
-        return "x = $x1 lub x = $x2"
+        val x1 = ((-b + sqrt(delta.toDouble())) / (2 * a)).toString()
+        val x2 = ((-b - sqrt(delta.toDouble())) / (2 * a)).toString()
+        return "x_{1} = ${calculateFraction((-b + sqrt(delta.toDouble())).toInt(), (2 * a))}   x_{2} = ${calculateFraction((-b + sqrt(delta.toDouble())).toInt(), (2 * a))}"
     }
     private fun calculateWrongX() : String{
         val random = Random
