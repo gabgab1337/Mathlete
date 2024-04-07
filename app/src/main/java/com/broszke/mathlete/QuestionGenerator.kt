@@ -1,5 +1,10 @@
 package com.broszke.mathlete
 
 interface QuestionGenerator {
-    fun generateQuestion(): QuizQuestion
+    fun generateQuestionX(): QuizQuestion {
+        throw UnsupportedOperationException("Not implemented")
+    }
+    fun generateQuestionVertex(): QuizQuestion {
+        throw UnsupportedOperationException("Not implemented")
+    }
 }

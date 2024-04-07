@@ -1,17 +1,16 @@
 package com.broszke.mathlete
 import kotlin.math.sqrt
 import kotlin.random.Random
-import com.broszke.mathlete.calculateFraction
 import kotlin.math.roundToInt
 
 data class QuadraticFunction(val a: Int = 0, val b: Int = 0, var c: Int = 0, val delta: Int = 0)
 class QuadraticGenerator : QuestionGenerator{
+    private val random = Random.Default
     var function: QuadraticFunction
     init{
         function = generateFunction()
     }
     fun generateFunction(): QuadraticFunction {
-        val random = Random
         var a: Int
         var b: Int
         var c: Int
@@ -72,13 +71,29 @@ class QuadraticGenerator : QuestionGenerator{
         }
     }
     private fun calculateWrongX() : String{
-        val random = Random
         val result1 = random.nextInt(20) - 10
         val result2 = random.nextInt(20) - 10 + result1
         return "x_{1} = $result1\\;\\;\\;x_{2} = $result2"
     }
 
-    override fun generateQuestion(): QuizQuestion {
+    private fun calculateVertex() : String {
+        val a = function.a
+        val b = function.b
+        val c = function.c
+        val x = -b / (2 * a)
+        val y = a * x * x + b * x + c
+        return "W = (${x}, ${y})"
+    }
+    private fun calculateWrongVertex() : String {
+        val a = function.a
+        val b = function.b + random.nextInt(10) + 1
+        val c = function.c - random.nextInt(10)
+        val x = -b / (2 * a)
+        val y = a * x * x + b * x + c
+        return "W = (${x}, ${y})"
+    }
+
+    override fun generateQuestionX(): QuizQuestion {
         function = generateFunction()
         val question = "Oblicz x dla:\n"
         val expression = "${if (function.a == 1) "" else if (function.a == -1) "-" else function.a}{x}^2" +
@@ -93,6 +108,27 @@ class QuadraticGenerator : QuestionGenerator{
         }
         while (wrongAnswer3 == wrongAnswer1 || wrongAnswer3 == wrongAnswer2) {
             wrongAnswer3 = calculateWrongX()
+        }
+        val answers = listOf(correctAnswer, wrongAnswer1, wrongAnswer2, wrongAnswer3).shuffled()
+        val correctAnswerIndex = answers.indexOf(correctAnswer)
+        return QuizQuestion(question, expression, answers, correctAnswerIndex)
+    }
+
+    override fun generateQuestionVertex(): QuizQuestion {
+        function = generateFunction()
+        val question = "Oblicz współrzędne wierzchołka dla funkcji o równaniu:\n"
+        val expression = "f(x)=${if (function.a == 1) "" else if (function.a == -1) "-" else function.a}{x}^2" +
+                "${if (function.b > 0) "+" else ""}${if (kotlin.math.abs(function.b) == 1) "" else function.b}x" +
+                "${if (function.c > 0) "+" else ""}${function.c}"
+        val correctAnswer = calculateVertex()
+        var wrongAnswer1 = calculateWrongVertex()
+        val wrongAnswer2 = calculateWrongVertex()
+        var wrongAnswer3 = calculateWrongVertex()
+        while (wrongAnswer1 == wrongAnswer2) {
+            wrongAnswer1 = calculateWrongVertex()
+        }
+        while (wrongAnswer3 == wrongAnswer1 || wrongAnswer3 == wrongAnswer2) {
+            wrongAnswer3 = calculateWrongVertex()
         }
         val answers = listOf(correctAnswer, wrongAnswer1, wrongAnswer2, wrongAnswer3).shuffled()
         val correctAnswerIndex = answers.indexOf(correctAnswer)

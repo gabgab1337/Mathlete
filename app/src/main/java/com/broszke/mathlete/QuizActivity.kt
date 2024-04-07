@@ -46,7 +46,8 @@ class QuizActivity : AppCompatActivity() {
             LinearGenerator(),
             QuadraticGenerator())
         generator = generatorsArray[generatorType] // TODO: Dodać inne generatory
-        quizQuestion = generator.generateQuestion()
+
+        quizQuestion = generator.generateQuestionX()
 
         // UI elements
         buttonAnswer1 = findViewById<FrameLayout>(R.id.buttonAnswer1).findViewById(R.id.webViewButton)
@@ -144,7 +145,7 @@ class QuizActivity : AppCompatActivity() {
     private fun generateNewQuestion() {
         if (questionsLeft > 0) {
             val generator: QuestionGenerator = generatorsArray[generatorType]
-            quizQuestion = generator.generateQuestion()
+            quizQuestion = generator.generateQuestionX()
 
             questionLeftText.text = "Pozostałe pytania: $questionsLeft"
             questionText.text = quizQuestion.question

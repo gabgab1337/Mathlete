@@ -26,7 +26,7 @@ class LinearGenerator : QuestionGenerator{
         return calculateFraction((equals - function.yIntercept + change), function.slope)
     }
 
-    override fun generateQuestion(): QuizQuestion {
+    override fun generateQuestionX(): QuizQuestion {
         function = generateFunction()
         val question = "Oblicz x dla:\n"
         val random = Random
