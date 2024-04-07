@@ -16,15 +16,41 @@ class QuadraticGenerator : QuestionGenerator{
         var b: Int
         var c: Int
         var delta: Int
-        do {
-            a = random.nextInt(10) + 1
-            b = random.nextInt(20) - 10
-            val n = random.nextInt(10) + 1 // generate a random integer n
-            delta = n * n // delta is a perfect square
-            c = (b * b - delta) / (4 * a)
-        } while (a * c == 0)
+        val signDelta = random.nextInt(8)
+        if (signDelta >= 3){ // 5/8 szansy na dodatnią deltę
+            do {
+                a = random.nextInt(10) + 1
+                b = random.nextInt(20) - 10
+                val n = random.nextInt(10) + 1
+                delta = n * n
+                c = b / 2 * b / 2 / a - delta
+                delta = (b * b - 4 * a * c) // Liczenie delty na nowo aby nie wyszła delta nieperfekcyjna
+            } while (a * c == 0 || !isPerfectSquare(delta) || delta >= 900)
+        } else if (signDelta >= 1) { // 2/8 szansy na deltę równą 0
+            do {
+                a = random.nextInt(10) + 1
+                b = random.nextInt(20) - 10
+                delta = 0
+                c = b / 2 * b / 2 / a
+                delta = (b * b - 4 * a * c)
+            } while (a * c == 0 || delta != 0)
+        } else { // 1/8 szansy na ujemną deltę
+            do {
+                a = random.nextInt(10) + 1
+                b = random.nextInt(20) - 10
+                c = b * b / (4 * a) + 1
+                delta = b * b - 4 * a * c // Liczenie delty na nowo aby nie wyszła delta nieperfekcyjna
+            } while (a * c == 0 || delta >= 0)
+        }
+        print("a: $a, b: $b, c: $c, delta: $delta\n")
         return QuadraticFunction(a, b, c, delta)
     }
+
+    private fun isPerfectSquare(n: Int): Boolean { // Helper do generatora
+        val sqrt = Math.sqrt(n.toDouble())
+        return sqrt.toInt() * sqrt.toInt() == n
+    }
+
     fun calculateX(equals: Int = 0) : String {
         val a = function.a
         val b = function.b
@@ -54,9 +80,10 @@ class QuadraticGenerator : QuestionGenerator{
 
     override fun generateQuestion(): QuizQuestion {
         function = generateFunction()
-        val question = "Oblicz miejsca zerowe dla:\n"
-        val expression = "${function.a}{x}^2+${function.b}x+${function.c}=0"
-        //expression = expression.replace("+-", "-")
+        val question = "Oblicz x dla:\n"
+        val expression = "${if (function.a == 1) "" else if (function.a == -1) "-" else function.a}{x}^2" +
+                "${if (function.b > 0) "+" else ""}${if (kotlin.math.abs(function.b) == 1) "" else function.b}x" +
+                "${if (function.c > 0) "+" else ""}${function.c}=0"
         val correctAnswer = calculateX()
         var wrongAnswer1 = calculateWrongX()
         val wrongAnswer2 = calculateWrongX()
