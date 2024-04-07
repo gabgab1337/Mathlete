@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity() {
                 val buttonIds = arrayOf(
                     R.id.buttonLinearGenerator,
                     R.id.buttonQuadraticGenerator,
-                    R.id.button3Generator,
+                    R.id.buttonVortex,
                     R.id.button4Generator,
                     R.id.button5Generator,
                     R.id.button6Generator,

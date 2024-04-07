@@ -44,10 +44,14 @@ class QuizActivity : AppCompatActivity() {
         generatorType = intent.getIntExtra("generatorType", 0)
         generatorsArray = arrayOf(
             LinearGenerator(),
+            QuadraticGenerator(),
             QuadraticGenerator())
         generator = generatorsArray[generatorType] // TODO: Dodać inne generatory
-
-        quizQuestion = generator.generateQuestionX()
+        quizQuestion = if (generatorType == 2){
+            generator.generateQuestionVertex()
+        } else{
+            generator.generateQuestionX()
+        }
 
         // UI elements
         buttonAnswer1 = findViewById<FrameLayout>(R.id.buttonAnswer1).findViewById(R.id.webViewButton)

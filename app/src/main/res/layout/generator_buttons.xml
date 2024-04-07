@@ -18,10 +18,10 @@
         android:visibility="gone" />
 
     <Button
-        android:id="@+id/button3Generator"
+        android:id="@+id/buttonVortex"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/button3Generator"
+        android:text="@string/buttonVortex"
         android:visibility="gone" />
 
     <Button

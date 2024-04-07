@@ -14,7 +14,7 @@
     <string name="questionsLeft" />
     <string name="buttonLinearGenerator">Funkcja Liniowa</string>
     <string name="buttonQuadraticGenerator">Funkcja Kwadratowa</string>
-    <string name="button3Generator">button 3 Generator</string>
+    <string name="buttonVortex">Wierzchołek funkcji kwadratowej</string>
     <string name="button4Generator">button 4 Generator</string>
     <string name="button5Generator">button 5 Generator</string>
     <string name="button6Generator">button 6 Generator</string>
