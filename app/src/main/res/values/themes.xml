@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <style name="Theme.Mathlete" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.Mathlete" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="fontFamily">@font/font_family</item>
+    </style>
 </resources>

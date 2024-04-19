@@ -149,7 +149,11 @@ class QuizActivity : AppCompatActivity() {
     private fun generateNewQuestion() {
         if (questionsLeft > 0) {
             val generator: QuestionGenerator = generatorsArray[generatorType]
-            quizQuestion = generator.generateQuestionX()
+            quizQuestion = if (generatorType == 2){
+                generator.generateQuestionVertex()
+            } else{
+                generator.generateQuestionX()
+            }
 
             questionLeftText.text = "Pozostałe pytania: $questionsLeft"
             questionText.text = quizQuestion.question

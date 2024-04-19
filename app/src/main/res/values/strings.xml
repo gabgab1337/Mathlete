@@ -12,12 +12,12 @@
     <string name="buttonAnswer3" />
     <string name="buttonAnswer4" />
     <string name="questionsLeft" />
-    <string name="buttonLinearGenerator">Funkcja Liniowa</string>
-    <string name="buttonQuadraticGenerator">Funkcja Kwadratowa</string>
+    <string name="buttonLinearGenerator">Równania liniowe</string>
+    <string name="buttonQuadraticGenerator">Równania kwadratowe</string>
     <string name="buttonVortex">Wierzchołek funkcji kwadratowej</string>
-    <string name="button4Generator">button 4 Generator</string>
-    <string name="button5Generator">button 5 Generator</string>
-    <string name="button6Generator">button 6 Generator</string>
+    <string name="buttonPerpendicularParallel">Funkcje prostopadłe i równoległe</string>
+    <string name="buttonMultiplication1">Wzory skróconego mnożenia 1</string>
+    <string name="buttonMultiplication2">Wzory skróconego mnożenia 2</string>
     <string name="button7Generator">button 7 Generator</string>
     <string name="button8Generator">button 8 Generator</string>
     <string name="button9Generator">button 9 Generator</string>

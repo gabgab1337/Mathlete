@@ -28,21 +28,21 @@
         android:id="@+id/button4Generator"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/button4Generator"
+        android:text="@string/buttonPerpendicularParallel"
         android:visibility="gone" />
 
     <Button
         android:id="@+id/button5Generator"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/button5Generator"
+        android:text="@string/buttonMultiplication1"
         android:visibility="gone" />
 
     <Button
         android:id="@+id/button6Generator"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/button6Generator"
+        android:text="@string/buttonMultiplication2"
         android:visibility="gone" />
 
     <Button

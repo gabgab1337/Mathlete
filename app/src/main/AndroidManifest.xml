@@ -18,13 +18,13 @@
         <activity
             android:name=".QuizActivity"
             android:exported="true"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
+            android:theme="@style/Theme.Mathlete">
         </activity>
 
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
+            android:theme="@style/Theme.Mathlete">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
