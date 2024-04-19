@@ -7,4 +7,7 @@ interface QuestionGenerator {
     fun generateQuestionVertex(): QuizQuestion {
         throw UnsupportedOperationException("Not implemented")
     }
+    fun generateQuestionPP(): QuizQuestion {
+        throw UnsupportedOperationException("Not implemented")
+    }
 }

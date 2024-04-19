@@ -25,21 +25,21 @@
         android:visibility="gone" />
 
     <Button
-        android:id="@+id/button4Generator"
+        android:id="@+id/buttonPerpendicularParallel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/buttonPerpendicularParallel"
         android:visibility="gone" />
 
     <Button
-        android:id="@+id/button5Generator"
+        android:id="@+id/buttonMultiplication1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/buttonMultiplication1"
         android:visibility="gone" />
 
     <Button
-        android:id="@+id/button6Generator"
+        android:id="@+id/buttonMultiplication2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/buttonMultiplication2"

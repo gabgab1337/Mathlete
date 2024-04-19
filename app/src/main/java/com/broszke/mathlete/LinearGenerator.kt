@@ -63,4 +63,251 @@ class LinearGenerator : QuestionGenerator{
         val correctAnswerIndex = answers.indexOf(correctAnswer)
         return QuizQuestion(question, expression, answers, correctAnswerIndex)
     }
+
+    override fun generateQuestionPP(): QuizQuestion { // Perpendicular Parallel
+        function = generateFunction()
+        val random = Random
+        val questionType = random.nextInt(1)
+        // *** PERPENDICULAR *** //
+        if (questionType == 0) {
+            val question = "Wskaż funkcję prostopadłą dla:\n"
+            var expression: String = when (function.slope) {
+                1 -> {
+                    "f(x) = x"
+                }
+
+                -1 -> {
+                    "f(x) = -x"
+                }
+
+                else -> {
+                    "f(x) = ${function.slope}x"
+                }
+            }
+            expression += if (function.yIntercept > 0) {
+                " + ${function.yIntercept}"
+            } else if (function.yIntercept < 0) {
+                " - ${-function.yIntercept}"
+            } else {
+                ""
+            }
+
+            val perpendicularSlope = -1 / function.slope
+            val perpendicularYIntercept = random.nextInt(30) - 15
+            var correctAnswer:String = when (perpendicularSlope) {
+                1 -> {
+                    "f(x) = x"
+                }
+
+                -1 -> {
+                    "f(x) = -x"
+                }
+
+                else -> {
+                    "f(x) = ${perpendicularSlope}x"
+                }
+            }
+            correctAnswer += if (perpendicularYIntercept > 0) {
+                " + ${perpendicularYIntercept}"
+            } else if (perpendicularYIntercept < 0) {
+                " - ${-perpendicularYIntercept}"
+            } else {
+                ""
+            }
+
+            val wrongAnswer1YIntercept = function.yIntercept + random.nextInt(10) + 1
+            var wrongAnswer1:String = when (function.slope) {
+                1 -> {
+                    "f(x) = x"
+                }
+
+                -1 -> {
+                    "f(x) = -x"
+                }
+
+                else -> {
+                    "f(x) = ${function.slope}x"
+                }
+            }
+            wrongAnswer1 += if (wrongAnswer1YIntercept > 0) {
+                " + ${wrongAnswer1YIntercept}"
+            } else if (wrongAnswer1YIntercept < 0) {
+                " - ${-wrongAnswer1YIntercept}"
+            } else {
+                ""
+            }
+
+            val wrongAnswer2Slope = function.slope + random.nextInt(10) + 1
+            val wrongAnswer2YIntercept = function.yIntercept - random.nextInt(10) - 1
+            var wrongAnswer2:String = when (wrongAnswer2Slope) {
+                1 -> {
+                    "f(x) = x"
+                }
+
+                -1 -> {
+                    "f(x) = -x"
+                }
+
+                else -> {
+                    "f(x) = ${wrongAnswer2Slope}x"
+                }
+            }
+            wrongAnswer2 += if (wrongAnswer2YIntercept > 0) {
+                " + ${wrongAnswer2YIntercept}"
+            } else if (wrongAnswer2YIntercept < 0) {
+                " - ${-wrongAnswer2YIntercept}"
+            } else {
+                ""
+            }
+
+            val wrongAnswer3Slope = function.slope - random.nextInt(10) - 1
+            val wrongAnswer3YIntercept = function.yIntercept + random.nextInt(10) + 1
+            var wrongAnswer3:String = when (wrongAnswer3Slope) {
+                1 -> {
+                    "f(x) = x"
+                }
+
+                -1 -> {
+                    "f(x) = -x"
+                }
+
+                else -> {
+                    "f(x) = ${wrongAnswer3Slope}x"
+                }
+            }
+            wrongAnswer3 += if (wrongAnswer3YIntercept > 0) {
+                " + ${wrongAnswer3YIntercept}"
+            } else if (wrongAnswer3YIntercept < 0) {
+                " - ${-wrongAnswer3YIntercept}"
+            } else {
+                ""
+            }
+
+            val answers = listOf(correctAnswer, wrongAnswer1, wrongAnswer2, wrongAnswer3).shuffled()
+            val correctAnswerIndex = answers.indexOf(correctAnswer)
+            return QuizQuestion(question, expression, answers, correctAnswerIndex)
+        }
+        // *** PARALLEL *** //
+        else {
+            val question = "Wskaż funkcję równoległą dla:\n"
+
+            val equals = random.nextInt(40) - 20
+            var expression: String = when (function.slope) {
+                1 -> {
+                    "x"
+                }
+
+                -1 -> {
+                    "-x"
+                }
+
+                else -> {
+                    "${function.slope}x"
+                }
+            }
+            expression += if (function.yIntercept > 0) {
+                " + ${function.yIntercept} = $equals"
+            } else if (function.yIntercept < 0) {
+                " - ${-function.yIntercept} = $equals"
+            } else {
+                " = $equals"
+            }
+
+            val parallelSlope = function.slope
+            val parallelYIntercept = function.yIntercept + random.nextInt(10) + 1
+            var correctAnswer:String = when (parallelSlope) {
+                1 -> {
+                    "f(x) = x"
+                }
+
+                -1 -> {
+                    "f(x) = -x"
+                }
+
+                else -> {
+                    "f(x) = ${parallelSlope}x"
+                }
+            }
+            correctAnswer += if (parallelYIntercept > 0) {
+                " + ${parallelYIntercept}"
+            } else if (parallelYIntercept < 0) {
+                " - ${-parallelYIntercept}"
+            } else {
+                ""
+            }
+
+            var wrongAnswer1Slope = -(1/function.slope)
+            val wrongAnswer1YIntercept = random.nextInt(30) - 15
+            var wrongAnswer1:String = when (wrongAnswer1Slope) {
+                1 -> {
+                    "f(x) = x"
+                }
+
+                -1 -> {
+                    "f(x) = -x"
+                }
+
+                else -> {
+                    "f(x) = ${wrongAnswer1Slope}x"
+                }
+            }
+            wrongAnswer1 += if (wrongAnswer1YIntercept > 0) {
+                " + ${wrongAnswer1YIntercept}"
+            } else if (wrongAnswer1YIntercept < 0) {
+                " - ${-wrongAnswer1YIntercept}"
+            } else {
+                ""
+            }
+
+            val wrongAnswer2Slope = function.slope + random.nextInt(10) + 1
+            val wrongAnswer2YIntercept = function.yIntercept - random.nextInt(10) - 1
+            var wrongAnswer2:String = when (wrongAnswer2Slope) {
+                1 -> {
+                    "f(x) = x"
+                }
+
+                -1 -> {
+                    "f(x) = -x"
+                }
+
+                else -> {
+                    "f(x) = ${wrongAnswer2Slope}x"
+                }
+            }
+            wrongAnswer2 += if (wrongAnswer2YIntercept > 0) {
+                " + ${wrongAnswer2YIntercept}"
+            } else if (wrongAnswer2YIntercept < 0) {
+                " - ${-wrongAnswer2YIntercept}"
+            } else {
+                ""
+            }
+
+            val wrongAnswer3Slope = function.slope - random.nextInt(10) - 1
+            val wrongAnswer3YIntercept = function.yIntercept + random.nextInt(10) + 1
+            var wrongAnswer3:String = when (wrongAnswer3Slope) {
+                1 -> {
+                    "f(x) = x"
+                }
+
+                -1 -> {
+                    "f(x) = -x"
+                }
+
+                else -> {
+                    "f(x) = ${wrongAnswer3Slope}x"
+                }
+            }
+            wrongAnswer3 += if (wrongAnswer3YIntercept > 0) {
+                " + ${wrongAnswer3YIntercept}"
+            } else if (wrongAnswer3YIntercept < 0) {
+                " - ${-wrongAnswer3YIntercept}"
+            } else {
+                ""
+            }
+
+            val answers = listOf(correctAnswer, wrongAnswer1, wrongAnswer2, wrongAnswer3).shuffled()
+            val correctAnswerIndex = answers.indexOf(correctAnswer)
+            return QuizQuestion(question, expression, answers, correctAnswerIndex)
+        }
+    }
 }
