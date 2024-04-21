@@ -22,12 +22,6 @@ class MainActivity : AppCompatActivity() {
                     R.id.buttonPerpendicularParallel,
                     R.id.buttonMultiplication1,
                     R.id.buttonMultiplication2,
-                    R.id.button7Generator,
-                    R.id.button8Generator,
-                    R.id.button9Generator,
-                    R.id.button10Generator,
-                    R.id.button11Generator,
-                    R.id.button12Generator
                 )
 
                 val generatorButtons = buttonIds.map { findViewById<Button>(it) }

@@ -46,12 +46,18 @@ class QuizActivity : AppCompatActivity() {
             LinearGenerator(),
             QuadraticGenerator(),
             QuadraticGenerator(),
-            LinearGenerator())
+            LinearGenerator(),
+            MultiplicationGenerator(),
+            MultiplicationGenerator())
         generator = generatorsArray[generatorType] // TODO: Dodać inne generatory
         quizQuestion = if (generatorType == 2){
             generator.generateQuestionVertex()
         } else if (generatorType == 3){
             generator.generateQuestionPP()
+        } else if (generatorType == 4){
+            generator.generateQuestionMultiplication1()
+        } else if (generatorType == 5){
+            generator.generateQuestionMultiplication2()
         } else {
             generator.generateQuestionX()
         }
@@ -89,10 +95,10 @@ class QuizActivity : AppCompatActivity() {
         loadAnswerIntoWebView(buttonAnswer2, quizQuestion.answers[1])
         loadAnswerIntoWebView(buttonAnswer3, quizQuestion.answers[2])
         loadAnswerIntoWebView(buttonAnswer4, quizQuestion.answers[3])
-        handleWebViewClick(buttonAnswer1, 0)
-        handleWebViewClick(buttonAnswer2, 1)
-        handleWebViewClick(buttonAnswer3, 2)
-        handleWebViewClick(buttonAnswer4, 3)
+        handleWebViewClick(buttonAnswer1, 0, findViewById(R.id.buttonAnswer1))
+        handleWebViewClick(buttonAnswer2, 1, findViewById(R.id.buttonAnswer2))
+        handleWebViewClick(buttonAnswer3, 2, findViewById(R.id.buttonAnswer3))
+        handleWebViewClick(buttonAnswer4, 3, findViewById(R.id.buttonAnswer4))
 
         // Timer
         timer = object : CountDownTimer(300000, 1000) { // 300000 milliseconds = 5 minutes
@@ -118,7 +124,7 @@ class QuizActivity : AppCompatActivity() {
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private fun handleWebViewClick(webView: WebView, answerIndex: Int) {
+    private fun handleWebViewClick(webView: WebView, answerIndex: Int, frameLayout: FrameLayout) {
         webView.setOnTouchListener { v, event ->
             if (event.action == MotionEvent.ACTION_UP) {
                 v.performClick() // Call performClick when a click is detected
@@ -127,14 +133,14 @@ class QuizActivity : AppCompatActivity() {
 
                 if (quizQuestion.correctAnswer == answerIndex) {
                     correctAnswers++
-                    webView.setBackgroundResource(R.drawable.button_correct_background)
+                    frameLayout.setBackgroundColor(Color.GREEN) // Change background color to green
                 } else {
-                    webView.setBackgroundResource(R.drawable.button_wrong_background)
+                    frameLayout.setBackgroundColor(Color.RED) // Change background color to red
                     when (quizQuestion.correctAnswer) {
-                        0 -> buttonAnswer1.setBackgroundResource(R.drawable.button_correct_background)
-                        1 -> buttonAnswer2.setBackgroundResource(R.drawable.button_correct_background)
-                        2 -> buttonAnswer3.setBackgroundResource(R.drawable.button_correct_background)
-                        3 -> buttonAnswer4.setBackgroundResource(R.drawable.button_correct_background)
+                        0 -> findViewById<FrameLayout>(R.id.buttonAnswer1).setBackgroundColor(Color.GREEN)
+                        1 -> findViewById<FrameLayout>(R.id.buttonAnswer2).setBackgroundColor(Color.GREEN)
+                        2 -> findViewById<FrameLayout>(R.id.buttonAnswer3).setBackgroundColor(Color.GREEN)
+                        3 -> findViewById<FrameLayout>(R.id.buttonAnswer4).setBackgroundColor(Color.GREEN)
                     }
                 }
                 questionsLeft -= 1
@@ -142,6 +148,7 @@ class QuizActivity : AppCompatActivity() {
                 Handler(Looper.getMainLooper()).postDelayed({
                     generateNewQuestion()
                     enableWebViews()
+                    resetBackgroundColors() // Reset background colors
                 }, 3000)
             }
             true
@@ -156,6 +163,10 @@ class QuizActivity : AppCompatActivity() {
                 generator.generateQuestionVertex()
             } else if (generatorType == 3){
                 generator.generateQuestionPP()
+            } else if (generatorType == 4){
+                generator.generateQuestionMultiplication1()
+            } else if (generatorType == 5){
+                generator.generateQuestionMultiplication2()
             } else {
                 generator.generateQuestionX()
             }
@@ -169,11 +180,6 @@ class QuizActivity : AppCompatActivity() {
             loadAnswerIntoWebView(buttonAnswer2, quizQuestion.answers[1])
             loadAnswerIntoWebView(buttonAnswer3, quizQuestion.answers[2])
             loadAnswerIntoWebView(buttonAnswer4, quizQuestion.answers[3])
-
-            buttonAnswer1.setBackgroundResource(R.drawable.button_background)
-            buttonAnswer2.setBackgroundResource(R.drawable.button_background)
-            buttonAnswer3.setBackgroundResource(R.drawable.button_background)
-            buttonAnswer4.setBackgroundResource(R.drawable.button_background)
         } else {
             timer.cancel()
             questionText.text = "\n\n\n\nKoniec!\nPoprawne odpowiedzi: $correctAnswers."
@@ -228,7 +234,10 @@ class QuizActivity : AppCompatActivity() {
                         display: flex;
                         justify-content: center;
                         font-size: 28px;
+                        margin: 0;
+                        padding: 0;
                         font-familt: Helvetica;
+                        color: #edebeb;
                     }
                 </style>
             </head>
@@ -265,19 +274,28 @@ class QuizActivity : AppCompatActivity() {
                                 MathJax.startup.defaultReady();
                                 MathJax.startup.promise.then(() => {
                                     console.log('MathJax initial typesetting complete');
+                                    centerContent();
                                 });
                             },
                             displayErrors: true,
                             displayMessages: true
                         }
                     };
+                        function centerContent() { // Add this function
+                        document.body.style.display = 'flex';
+                        document.body.style.justifyContent = 'center';
+                        document.body.style.alignItems = 'center';
+                        document.body.style.height = '100%';
+                    }
                 </script>
                 <style>
                     body{
-                        display: flex;
-                        justify-content: center;
+                        margin: 0;
+                        padding: 0;
                         font-size: 14px;
                         font-familt: Helvetica;
+                        color: #000000;
+                        background-color: #c38fff;
                     }
                 </style>
             </head>
@@ -289,6 +307,13 @@ class QuizActivity : AppCompatActivity() {
             </html>
         """.trimIndent()
         webView.loadDataWithBaseURL("file:///android_asset/" ,html, "text/html", "utf-8", null)
+    }
+
+    private fun resetBackgroundColors() {
+        findViewById<FrameLayout>(R.id.buttonAnswer1).setBackgroundColor(Color.TRANSPARENT)
+        findViewById<FrameLayout>(R.id.buttonAnswer2).setBackgroundColor(Color.TRANSPARENT)
+        findViewById<FrameLayout>(R.id.buttonAnswer3).setBackgroundColor(Color.TRANSPARENT)
+        findViewById<FrameLayout>(R.id.buttonAnswer4).setBackgroundColor(Color.TRANSPARENT)
     }
 
     private fun endQuiz() {
