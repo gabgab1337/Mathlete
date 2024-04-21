@@ -45,11 +45,14 @@ class QuizActivity : AppCompatActivity() {
         generatorsArray = arrayOf(
             LinearGenerator(),
             QuadraticGenerator(),
-            QuadraticGenerator())
+            QuadraticGenerator(),
+            LinearGenerator())
         generator = generatorsArray[generatorType] // TODO: Dodać inne generatory
         quizQuestion = if (generatorType == 2){
             generator.generateQuestionVertex()
-        } else{
+        } else if (generatorType == 3){
+            generator.generateQuestionPP()
+        } else {
             generator.generateQuestionX()
         }
 
@@ -151,7 +154,9 @@ class QuizActivity : AppCompatActivity() {
             val generator: QuestionGenerator = generatorsArray[generatorType]
             quizQuestion = if (generatorType == 2){
                 generator.generateQuestionVertex()
-            } else{
+            } else if (generatorType == 3){
+                generator.generateQuestionPP()
+            } else {
                 generator.generateQuestionX()
             }
 
@@ -222,8 +227,8 @@ class QuizActivity : AppCompatActivity() {
                     body{
                         display: flex;
                         justify-content: center;
-
                         font-size: 28px;
+                        font-familt: Helvetica;
                     }
                 </style>
             </head>
@@ -272,6 +277,7 @@ class QuizActivity : AppCompatActivity() {
                         display: flex;
                         justify-content: center;
                         font-size: 14px;
+                        font-familt: Helvetica;
                     }
                 </style>
             </head>

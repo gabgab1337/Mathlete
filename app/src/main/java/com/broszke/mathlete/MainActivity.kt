@@ -36,14 +36,14 @@ class MainActivity : AppCompatActivity() {
                 buttonLessons.setOnClickListener {
                     centerSceneText.visibility = View.VISIBLE
                     generatorButtons.forEach { it.visibility = View.GONE }
-                    centerSceneText.text = "Lekcje tutaj o"
+                    centerSceneText.text = "TBD\nLekcje tutaj o"
                 }
 
                 val buttonProgress: Button = findViewById(R.id.buttonProgress)
                 buttonProgress.setOnClickListener {
                     centerSceneText.visibility = View.VISIBLE
                     generatorButtons.forEach { it.visibility = View.GONE }
-                    centerSceneText.text = "Progressik"
+                    centerSceneText.text = "TBD\nProgressik"
                 }
 
                 val buttonGenerator: Button = findViewById(R.id.buttonGenerator)

@@ -67,7 +67,7 @@ class LinearGenerator : QuestionGenerator{
     override fun generateQuestionPP(): QuizQuestion { // Perpendicular Parallel
         function = generateFunction()
         val random = Random
-        val questionType = random.nextInt(1)
+        val questionType = random.nextInt(2)
         // *** PERPENDICULAR *** //
         if (questionType == 0) {
             val question = "Wskaż funkcję prostopadłą dla:\n"
@@ -92,14 +92,14 @@ class LinearGenerator : QuestionGenerator{
                 ""
             }
 
-            val perpendicularSlope = -1 / function.slope
+            val perpendicularSlope = -1 / function.slope.toFloat()
             val perpendicularYIntercept = random.nextInt(30) - 15
             var correctAnswer:String = when (perpendicularSlope) {
-                1 -> {
+                1F -> {
                     "f(x) = x"
                 }
 
-                -1 -> {
+                -1F -> {
                     "f(x) = -x"
                 }
 
@@ -190,27 +190,25 @@ class LinearGenerator : QuestionGenerator{
         // *** PARALLEL *** //
         else {
             val question = "Wskaż funkcję równoległą dla:\n"
-
-            val equals = random.nextInt(40) - 20
             var expression: String = when (function.slope) {
                 1 -> {
-                    "x"
+                    "f(x) = x"
                 }
 
                 -1 -> {
-                    "-x"
+                    "f(x) = -x"
                 }
 
                 else -> {
-                    "${function.slope}x"
+                    "f(x) = ${function.slope}x"
                 }
             }
             expression += if (function.yIntercept > 0) {
-                " + ${function.yIntercept} = $equals"
+                " + ${function.yIntercept}"
             } else if (function.yIntercept < 0) {
-                " - ${-function.yIntercept} = $equals"
+                " - ${-function.yIntercept}"
             } else {
-                " = $equals"
+                ""
             }
 
             val parallelSlope = function.slope
@@ -236,14 +234,14 @@ class LinearGenerator : QuestionGenerator{
                 ""
             }
 
-            var wrongAnswer1Slope = -(1/function.slope)
+            val wrongAnswer1Slope = -(1 / function.slope.toFloat())
             val wrongAnswer1YIntercept = random.nextInt(30) - 15
             var wrongAnswer1:String = when (wrongAnswer1Slope) {
-                1 -> {
+                1F -> {
                     "f(x) = x"
                 }
 
-                -1 -> {
+                -1F -> {
                     "f(x) = -x"
                 }
 
