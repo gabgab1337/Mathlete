@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <Button
+        android:id="@+id/buttonLinearGenerator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/buttonLinearGenerator"
+        android:visibility="gone"
+        android:layout_margin="4dp"/>
+
+    <Button
+        android:id="@+id/buttonQuadraticGenerator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/buttonQuadraticGenerator"
+        android:visibility="gone"
+        android:layout_margin="4dp"/>
+
+    <Button
+        android:id="@+id/buttonVortex"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/buttonVortex"
+        android:visibility="gone"
+        android:layout_margin="4dp"/>
+
+    <Button
+        android:id="@+id/buttonPerpendicularParallel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/buttonPerpendicularParallel"
+        android:visibility="gone"
+        android:layout_margin="4dp"/>
+
+    <Button
+        android:id="@+id/buttonMultiplication1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/buttonMultiplication1"
+        android:visibility="gone"
+        android:layout_margin="4dp"/>
+
+    <Button
+        android:id="@+id/buttonMultiplication2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/buttonMultiplication2"
+        android:visibility="gone"
+        android:layout_margin="4dp"/>
+</LinearLayout>

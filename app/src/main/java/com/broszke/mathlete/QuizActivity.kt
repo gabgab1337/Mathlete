@@ -8,16 +8,18 @@ import android.graphics.Color
 import android.os.CountDownTimer
 import android.os.Looper
 import android.os.Handler
+import android.view.MotionEvent
 import android.view.View
 import android.webkit.WebView
+import android.widget.FrameLayout
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 
 class QuizActivity : AppCompatActivity() {
-    private lateinit var buttonAnswer1: Button
-    private lateinit var buttonAnswer2: Button
-    private lateinit var buttonAnswer3: Button
-    private lateinit var buttonAnswer4: Button
+    private lateinit var buttonAnswer1: WebView
+    private lateinit var buttonAnswer2: WebView
+    private lateinit var buttonAnswer3: WebView
+    private lateinit var buttonAnswer4: WebView
     private lateinit var buttonExit: Button
     private lateinit var questionText: TextView
     private lateinit var questionLeftText: TextView
@@ -25,9 +27,11 @@ class QuizActivity : AppCompatActivity() {
     private lateinit var timerTextView: TextView
     private lateinit var expressionView: WebView
 
+    private var generatorType: Int = 0
+    private lateinit var generatorsArray: Array<QuestionGenerator>
+    private lateinit var generator: QuestionGenerator
+    private lateinit var quizQuestion: QuizQuestion
     private var questionsLeft = 5
-    private val generator: QuestionGenerator = LinearGenerator() // TODO: Dodać inne generatory
-    private var quizQuestion: QuizQuestion = generator.generateQuestion()
     private var correctAnswers = 0
 
     @SuppressLint("SetTextI18n", "SetJavaScriptEnabled")
@@ -35,14 +39,34 @@ class QuizActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         supportActionBar?.hide()
         setContentView(R.layout.quiz_layout)
-        val quizType = 0 // TODO: Dodać inne typy i obsługę typów quizów
         enableEdgeToEdge()
 
+        generatorType = intent.getIntExtra("generatorType", 0)
+        generatorsArray = arrayOf(
+            LinearGenerator(),
+            QuadraticGenerator(),
+            QuadraticGenerator(),
+            LinearGenerator(),
+            MultiplicationGenerator(),
+            MultiplicationGenerator())
+        generator = generatorsArray[generatorType] // TODO: Dodać inne generatory
+        quizQuestion = if (generatorType == 2){
+            generator.generateQuestionVertex()
+        } else if (generatorType == 3){
+            generator.generateQuestionPP()
+        } else if (generatorType == 4){
+            generator.generateQuestionMultiplication1()
+        } else if (generatorType == 5){
+            generator.generateQuestionMultiplication2()
+        } else {
+            generator.generateQuestionX()
+        }
+
         // UI elements
-        buttonAnswer1 = findViewById(R.id.buttonAnswer1)
-        buttonAnswer2 = findViewById(R.id.buttonAnswer2)
-        buttonAnswer3 = findViewById(R.id.buttonAnswer3)
-        buttonAnswer4 = findViewById(R.id.buttonAnswer4)
+        buttonAnswer1 = findViewById<FrameLayout>(R.id.buttonAnswer1).findViewById(R.id.webViewButton)
+        buttonAnswer2 = findViewById<FrameLayout>(R.id.buttonAnswer2).findViewById(R.id.webViewButton)
+        buttonAnswer3 = findViewById<FrameLayout>(R.id.buttonAnswer3).findViewById(R.id.webViewButton)
+        buttonAnswer4 = findViewById<FrameLayout>(R.id.buttonAnswer4).findViewById(R.id.webViewButton)
         buttonExit = findViewById(R.id.buttonExit)
         questionText = findViewById(R.id.question)
         questionLeftText = findViewById(R.id.questionsLeft)
@@ -53,18 +77,28 @@ class QuizActivity : AppCompatActivity() {
         expressionView.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null)
         loadExpression()
 
+        // Disable WebView's built-in click handling
+        buttonAnswer1.isClickable = false
+        buttonAnswer1.isFocusable = false
+        buttonAnswer2.isClickable = false
+        buttonAnswer2.isFocusable = false
+        buttonAnswer3.isClickable = false
+        buttonAnswer3.isFocusable = false
+        buttonAnswer4.isClickable = false
+        buttonAnswer4.isFocusable = false
+
         questionText.text = quizQuestion.question
         questionLeftText.text = "Pozostałe pytania: $questionsLeft"
 
         // Buttony i handlery
-        buttonAnswer1.text = quizQuestion.answers[0]
-        buttonAnswer2.text = quizQuestion.answers[1]
-        buttonAnswer3.text = quizQuestion.answers[2]
-        buttonAnswer4.text = quizQuestion.answers[3]
-        handleButtonClick(buttonAnswer1, 0)
-        handleButtonClick(buttonAnswer2, 1)
-        handleButtonClick(buttonAnswer3, 2)
-        handleButtonClick(buttonAnswer4, 3)
+        loadAnswerIntoWebView(buttonAnswer1, quizQuestion.answers[0])
+        loadAnswerIntoWebView(buttonAnswer2, quizQuestion.answers[1])
+        loadAnswerIntoWebView(buttonAnswer3, quizQuestion.answers[2])
+        loadAnswerIntoWebView(buttonAnswer4, quizQuestion.answers[3])
+        handleWebViewClick(buttonAnswer1, 0, findViewById(R.id.buttonAnswer1))
+        handleWebViewClick(buttonAnswer2, 1, findViewById(R.id.buttonAnswer2))
+        handleWebViewClick(buttonAnswer3, 2, findViewById(R.id.buttonAnswer3))
+        handleWebViewClick(buttonAnswer4, 3, findViewById(R.id.buttonAnswer4))
 
         // Timer
         timer = object : CountDownTimer(300000, 1000) { // 300000 milliseconds = 5 minutes
@@ -89,51 +123,63 @@ class QuizActivity : AppCompatActivity() {
         }
     }
 
-    private fun handleButtonClick(button: Button, answerIndex: Int) {
-        button.setOnClickListener {
-            disableButtons()
+    @SuppressLint("ClickableViewAccessibility")
+    private fun handleWebViewClick(webView: WebView, answerIndex: Int, frameLayout: FrameLayout) {
+        webView.setOnTouchListener { v, event ->
+            if (event.action == MotionEvent.ACTION_UP) {
+                v.performClick() // Call performClick when a click is detected
 
-            if (quizQuestion.correctAnswer == answerIndex) {
-                correctAnswers++
-                button.setBackgroundResource(R.drawable.button_correct_background)
-            } else {
-                button.setBackgroundResource(R.drawable.button_wrong_background)
-                when (quizQuestion.correctAnswer) {
-                    0 -> buttonAnswer1.setBackgroundResource(R.drawable.button_correct_background)
-                    1 -> buttonAnswer2.setBackgroundResource(R.drawable.button_correct_background)
-                    2 -> buttonAnswer3.setBackgroundResource(R.drawable.button_correct_background)
-                    3 -> buttonAnswer4.setBackgroundResource(R.drawable.button_correct_background)
+                disableWebViews()
+
+                if (quizQuestion.correctAnswer == answerIndex) {
+                    correctAnswers++
+                    frameLayout.setBackgroundColor(Color.GREEN) // Change background color to green
+                } else {
+                    frameLayout.setBackgroundColor(Color.RED) // Change background color to red
+                    when (quizQuestion.correctAnswer) {
+                        0 -> findViewById<FrameLayout>(R.id.buttonAnswer1).setBackgroundColor(Color.GREEN)
+                        1 -> findViewById<FrameLayout>(R.id.buttonAnswer2).setBackgroundColor(Color.GREEN)
+                        2 -> findViewById<FrameLayout>(R.id.buttonAnswer3).setBackgroundColor(Color.GREEN)
+                        3 -> findViewById<FrameLayout>(R.id.buttonAnswer4).setBackgroundColor(Color.GREEN)
+                    }
                 }
-            }
-            questionsLeft -= 1
+                questionsLeft -= 1
 
-            Handler(Looper.getMainLooper()).postDelayed({
-                generateNewQuestion()
-                enableButtons()
-            }, 3000)
+                Handler(Looper.getMainLooper()).postDelayed({
+                    generateNewQuestion()
+                    enableWebViews()
+                    resetBackgroundColors() // Reset background colors
+                }, 3000)
+            }
+            true
         }
     }
 
     @SuppressLint("SetTextI18n")
     private fun generateNewQuestion() {
         if (questionsLeft > 0) {
-            val generator: QuestionGenerator = LinearGenerator()
-            quizQuestion = generator.generateQuestion()
+            val generator: QuestionGenerator = generatorsArray[generatorType]
+            quizQuestion = if (generatorType == 2){
+                generator.generateQuestionVertex()
+            } else if (generatorType == 3){
+                generator.generateQuestionPP()
+            } else if (generatorType == 4){
+                generator.generateQuestionMultiplication1()
+            } else if (generatorType == 5){
+                generator.generateQuestionMultiplication2()
+            } else {
+                generator.generateQuestionX()
+            }
 
             questionLeftText.text = "Pozostałe pytania: $questionsLeft"
             questionText.text = quizQuestion.question
 
             loadExpression()
 
-            buttonAnswer1.text = quizQuestion.answers[0]
-            buttonAnswer2.text = quizQuestion.answers[1]
-            buttonAnswer3.text = quizQuestion.answers[2]
-            buttonAnswer4.text = quizQuestion.answers[3]
-
-            buttonAnswer1.setBackgroundResource(R.drawable.button_background)
-            buttonAnswer2.setBackgroundResource(R.drawable.button_background)
-            buttonAnswer3.setBackgroundResource(R.drawable.button_background)
-            buttonAnswer4.setBackgroundResource(R.drawable.button_background)
+            loadAnswerIntoWebView(buttonAnswer1, quizQuestion.answers[0])
+            loadAnswerIntoWebView(buttonAnswer2, quizQuestion.answers[1])
+            loadAnswerIntoWebView(buttonAnswer3, quizQuestion.answers[2])
+            loadAnswerIntoWebView(buttonAnswer4, quizQuestion.answers[3])
         } else {
             timer.cancel()
             questionText.text = "\n\n\n\nKoniec!\nPoprawne odpowiedzi: $correctAnswers."
@@ -141,14 +187,14 @@ class QuizActivity : AppCompatActivity() {
         }
     }
 
-    private fun disableButtons() {
+    private fun disableWebViews() {
         buttonAnswer1.isEnabled = false
         buttonAnswer2.isEnabled = false
         buttonAnswer3.isEnabled = false
         buttonAnswer4.isEnabled = false
     }
 
-    private fun enableButtons() {
+    private fun enableWebViews() {
         buttonAnswer1.isEnabled = true
         buttonAnswer2.isEnabled = true
         buttonAnswer3.isEnabled = true
@@ -161,7 +207,7 @@ class QuizActivity : AppCompatActivity() {
             <html>
             <head>
                 <script type="text/javascript" async
-                    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-chtml-full.min.js">
+                    src="file:///android_asset/MathJax/es5/tex-chtml-full.js">
                 </script>
                 <script type="text/javascript">
                     MathJax = {
@@ -178,8 +224,8 @@ class QuizActivity : AppCompatActivity() {
                                     console.log('MathJax initial typesetting complete');
                                 });
                             },
-                            displayErrors: false,
-                            displayMessages: false
+                            displayErrors: true,
+                            displayMessages: true
                         }
                     };
                 </script>
@@ -187,8 +233,11 @@ class QuizActivity : AppCompatActivity() {
                     body{
                         display: flex;
                         justify-content: center;
-
-                        font-size: 32px;
+                        font-size: 28px;
+                        margin: 0;
+                        padding: 0;
+                        font-familt: Helvetica;
+                        color: #edebeb;
                     }
                 </style>
             </head>
@@ -199,7 +248,72 @@ class QuizActivity : AppCompatActivity() {
             </body>
             </html>
         """.trimIndent()
-        expressionView.loadDataWithBaseURL("https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/" ,html, "text/html", "utf-8", null)
+        expressionView.loadDataWithBaseURL("file:///android_asset/" ,html, "text/html", "utf-8", null)
+    }
+
+    @SuppressLint("SetJavaScriptEnabled")
+    private fun loadAnswerIntoWebView(webView: WebView, answer: String) {
+        webView.settings.javaScriptEnabled = true
+        val html = """
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <script type="text/javascript" async
+                    src="file:///android_asset/MathJax/es5/tex-chtml-full.js">
+                </script>
+                <script type="text/javascript">
+                    MathJax = {
+                        tex: {
+                            inlineMath: [['$', '$'], ['\\(', '\\)']]
+                        },
+                        options: {
+                            skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+                        },
+                        startup: {
+                            ready: () => {
+                                MathJax.startup.defaultReady();
+                                MathJax.startup.promise.then(() => {
+                                    console.log('MathJax initial typesetting complete');
+                                    centerContent();
+                                });
+                            },
+                            displayErrors: true,
+                            displayMessages: true
+                        }
+                    };
+                        function centerContent() { // Add this function
+                        document.body.style.display = 'flex';
+                        document.body.style.justifyContent = 'center';
+                        document.body.style.alignItems = 'center';
+                        document.body.style.height = '100%';
+                    }
+                </script>
+                <style>
+                    body{
+                        margin: 0;
+                        padding: 0;
+                        font-size: 14px;
+                        font-familt: Helvetica;
+                        color: #000000;
+                        background-color: #c38fff;
+                    }
+                </style>
+            </head>
+            <body>
+                <p>
+                    $$${answer}$$
+                </p>
+            </body>
+            </html>
+        """.trimIndent()
+        webView.loadDataWithBaseURL("file:///android_asset/" ,html, "text/html", "utf-8", null)
+    }
+
+    private fun resetBackgroundColors() {
+        findViewById<FrameLayout>(R.id.buttonAnswer1).setBackgroundColor(Color.TRANSPARENT)
+        findViewById<FrameLayout>(R.id.buttonAnswer2).setBackgroundColor(Color.TRANSPARENT)
+        findViewById<FrameLayout>(R.id.buttonAnswer3).setBackgroundColor(Color.TRANSPARENT)
+        findViewById<FrameLayout>(R.id.buttonAnswer4).setBackgroundColor(Color.TRANSPARENT)
     }
 
     private fun endQuiz() {

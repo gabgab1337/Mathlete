@@ -2,6 +2,7 @@ package com.broszke.mathlete
 
 import android.os.Bundle
 import android.content.Intent
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.Button
 import android.widget.TextView
@@ -11,18 +12,46 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
                 setContentView(R.layout.main_screen_layout)
                 val centerSceneText: TextView = findViewById(R.id.centerText)
-                val buttonGenerator: Button = findViewById(R.id.buttonGenerator)
-                buttonGenerator.setOnClickListener {
-                    val intent = Intent(this, QuizActivity::class.java)
-                    startActivity(intent)
-                }
+                centerSceneText.text = "Witaj w Mathlete!"
+
+                // Generator buttony
+                val buttonIds = arrayOf(
+                    R.id.buttonLinearGenerator,
+                    R.id.buttonQuadraticGenerator,
+                    R.id.buttonVortex,
+                    R.id.buttonPerpendicularParallel,
+                    R.id.buttonMultiplication1,
+                    R.id.buttonMultiplication2,
+                )
+
+                val generatorButtons = buttonIds.map { findViewById<Button>(it) }
+
                 val buttonLessons: Button = findViewById(R.id.buttonLessons)
                 buttonLessons.setOnClickListener {
-                    centerSceneText.text = "Lekcje tutaj o"
+                    centerSceneText.visibility = View.VISIBLE
+                    generatorButtons.forEach { it.visibility = View.GONE }
+                    centerSceneText.text = "TBD\nLekcje tutaj o"
                 }
+
                 val buttonProgress: Button = findViewById(R.id.buttonProgress)
                 buttonProgress.setOnClickListener {
-                    centerSceneText.text = "Progressik"
+                    centerSceneText.visibility = View.VISIBLE
+                    generatorButtons.forEach { it.visibility = View.GONE }
+                    centerSceneText.text = "TBD\nProgressik"
+                }
+
+                val buttonGenerator: Button = findViewById(R.id.buttonGenerator)
+                buttonGenerator.setOnClickListener {
+                    centerSceneText.visibility = View.GONE
+                    generatorButtons.forEach { it.visibility = View.VISIBLE }
+                }
+
+                generatorButtons.forEachIndexed { index, button ->
+                    button.setOnClickListener {
+                        val intent = Intent(this, QuizActivity::class.java)
+                        intent.putExtra("generatorType", index)
+                        startActivity(intent)
+                    }
                 }
     }
 }

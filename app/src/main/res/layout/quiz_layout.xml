@@ -73,33 +73,17 @@
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent">
 
-        <Button
-            android:id="@+id/buttonAnswer1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/buttonAnswer1"
-            android:background="@drawable/button_background" />
+        <include layout="@layout/webview_button_layout"
+            android:id="@+id/buttonAnswer1" />
 
-        <Button
-            android:id="@+id/buttonAnswer2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/buttonAnswer2"
-            android:background="@drawable/button_background"/>
+        <include layout="@layout/webview_button_layout"
+            android:id="@+id/buttonAnswer2" />
 
-        <Button
-            android:id="@+id/buttonAnswer3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/buttonAnswer3"
-            android:background="@drawable/button_background"/>
+        <include layout="@layout/webview_button_layout"
+            android:id="@+id/buttonAnswer3" />
 
-        <Button
-            android:id="@+id/buttonAnswer4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/buttonAnswer4"
-            android:background="@drawable/button_background"/>
+        <include layout="@layout/webview_button_layout"
+            android:id="@+id/buttonAnswer4" />
 
         <Button
             android:id="@+id/buttonExit"
