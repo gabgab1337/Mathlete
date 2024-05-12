@@ -39,7 +39,7 @@ class QuizActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         supportActionBar?.hide()
         setContentView(R.layout.quiz_layout)
-        enableEdgeToEdge()
+        //enableEdgeToEdge()
 
         generatorType = intent.getIntExtra("generatorType", 0)
         generatorsArray = arrayOf(
@@ -49,7 +49,7 @@ class QuizActivity : AppCompatActivity() {
             LinearGenerator(),
             MultiplicationGenerator(),
             MultiplicationGenerator())
-        generator = generatorsArray[generatorType] // TODO: Dodać inne generatory
+        generator = generatorsArray[generatorType]
         quizQuestion = if (generatorType == 2){
             generator.generateQuestionVertex()
         } else if (generatorType == 3){
