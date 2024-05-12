@@ -24,4 +24,5 @@
     <string name="button10Generator">button 10 Generator</string>
     <string name="button11Generator">button 11 Generator</string>
     <string name="button12Generator">button 12 Generator</string>
+    <string name="title_activity_loading">LoadingActivity</string>
 </resources>
