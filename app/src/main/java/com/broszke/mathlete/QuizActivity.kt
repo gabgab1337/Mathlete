@@ -1,19 +1,27 @@
 package com.broszke.mathlete
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Context
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import android.graphics.Color
+import android.content.Intent
 import android.os.CountDownTimer
 import android.os.Looper
 import android.os.Handler
+import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.webkit.WebView
 import android.widget.FrameLayout
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContract
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import kotlinx.coroutines.delay
 
 class QuizActivity : AppCompatActivity() {
     private lateinit var buttonAnswer1: WebView
@@ -34,12 +42,18 @@ class QuizActivity : AppCompatActivity() {
     private var questionsLeft = 5
     private var correctAnswers = 0
 
+    private lateinit var loadingFrame: FrameLayout
+    private lateinit var inflater: LayoutInflater
+
     @SuppressLint("SetTextI18n", "SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportActionBar?.hide()
         setContentView(R.layout.quiz_layout)
         //enableEdgeToEdge()
+        loadingFrame = findViewById(R.id.loading_frame)
+        inflater = LayoutInflater.from(this)
+        inflater.inflate(R.layout.loading_layout, loadingFrame, true)
 
         generatorType = intent.getIntExtra("generatorType", 0)
         generatorsArray = arrayOf(
@@ -174,12 +188,19 @@ class QuizActivity : AppCompatActivity() {
             questionLeftText.text = "Pozostałe pytania: $questionsLeft"
             questionText.text = quizQuestion.question
 
+
+            loadingFrame.visibility = View.VISIBLE
+
             loadExpression()
 
             loadAnswerIntoWebView(buttonAnswer1, quizQuestion.answers[0])
             loadAnswerIntoWebView(buttonAnswer2, quizQuestion.answers[1])
             loadAnswerIntoWebView(buttonAnswer3, quizQuestion.answers[2])
             loadAnswerIntoWebView(buttonAnswer4, quizQuestion.answers[3])
+
+            Handler(Looper.getMainLooper()).postDelayed({
+                loadingFrame.visibility = View.GONE
+            }, 5000)
         } else {
             timer.cancel()
             questionText.text = "\n\n\n\nKoniec!\nPoprawne odpowiedzi: $correctAnswers."
