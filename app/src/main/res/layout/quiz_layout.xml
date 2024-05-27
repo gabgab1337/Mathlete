@@ -92,8 +92,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Wyjdź"
-            android:visibility="gone"
-            android:background="@drawable/button_background"/>
+            android:visibility="gone"/>
 
     </LinearLayout>
 

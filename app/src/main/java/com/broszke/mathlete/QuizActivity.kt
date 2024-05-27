@@ -104,6 +104,8 @@ class QuizActivity : AppCompatActivity() {
         questionText.text = quizQuestion.question
         questionLeftText.text = "Pozostałe pytania: $questionsLeft"
 
+        loadingFrame.visibility = View.VISIBLE
+
         // Buttony i handlery
         loadAnswerIntoWebView(buttonAnswer1, quizQuestion.answers[0])
         loadAnswerIntoWebView(buttonAnswer2, quizQuestion.answers[1])
@@ -114,8 +116,12 @@ class QuizActivity : AppCompatActivity() {
         handleWebViewClick(buttonAnswer3, 2, findViewById(R.id.buttonAnswer3))
         handleWebViewClick(buttonAnswer4, 3, findViewById(R.id.buttonAnswer4))
 
+        Handler(Looper.getMainLooper()).postDelayed({
+            loadingFrame.visibility = View.GONE
+        }, 5000)
+
         // Timer
-        timer = object : CountDownTimer(300000, 1000) { // 300000 milliseconds = 5 minutes
+        timer = object : CountDownTimer(305000, 1000) { // 305000 milliseconds = 5 minutes
             override fun onTick(millisUntilFinished: Long) {
                 val minutes = millisUntilFinished / 1000 / 60
                 val seconds = millisUntilFinished / 1000 % 60
