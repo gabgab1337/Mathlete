@@ -22,6 +22,7 @@ import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.coroutines.delay
+import kotlin.random.Random
 
 class QuizActivity : AppCompatActivity() {
     private lateinit var buttonAnswer1: WebView
@@ -104,6 +105,9 @@ class QuizActivity : AppCompatActivity() {
         questionText.text = quizQuestion.question
         questionLeftText.text = "Pozostałe pytania: $questionsLeft"
 
+        val loadingTexts = resources.getStringArray(R.array.loading_texts)
+        val randomText = loadingTexts[kotlin.random.Random.nextInt(loadingTexts.size)]
+        findViewById<TextView>(R.id.loading_text).text = randomText
         loadingFrame.visibility = View.VISIBLE
 
         // Buttony i handlery
@@ -194,7 +198,9 @@ class QuizActivity : AppCompatActivity() {
             questionLeftText.text = "Pozostałe pytania: $questionsLeft"
             questionText.text = quizQuestion.question
 
-
+            val loadingTexts = resources.getStringArray(R.array.loading_texts)
+            val randomText = loadingTexts[kotlin.random.Random.nextInt(loadingTexts.size)]
+            findViewById<TextView>(R.id.loading_text).text = randomText
             loadingFrame.visibility = View.VISIBLE
 
             loadExpression()
