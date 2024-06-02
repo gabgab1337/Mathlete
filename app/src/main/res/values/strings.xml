@@ -13,4 +13,6 @@
     <string name="buttonAnswer3" />
     <string name="buttonAnswer4" />
     <string name="questionsLeft" />
+    <string name="default_web_client_id" translatable="false">ID_KLIENTA_WEBOWEGO</string>
+
 </resources>

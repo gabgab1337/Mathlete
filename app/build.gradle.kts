@@ -2,7 +2,6 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     id("com.google.gms.google-services")
-
 }
 
 android {
@@ -20,6 +19,10 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+    }
+
+    tasks.withType<Test> {
+        useJUnitPlatform()
     }
 
     buildTypes {
@@ -67,11 +70,19 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     testImplementation(libs.junit)
+    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation(platform("com.google.firebase:firebase-bom:28.4.1")) // najnowsza wersja
+    implementation("com.google.firebase:firebase-auth-ktx")
+    implementation("com.google.android.gms:play-services-auth:19.2.0")
+
 
 }
+apply(plugin = "com.google.gms.google-services")
