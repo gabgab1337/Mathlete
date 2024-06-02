@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Mathlete</string>
     <string name="buttonProfile">Profil</string>
     <string name="buttonSettings">Ustawienia</string>
@@ -24,4 +24,27 @@
     <string name="button10Generator">button 10 Generator</string>
     <string name="button11Generator">button 11 Generator</string>
     <string name="button12Generator">button 12 Generator</string>
+    <string name="title_activity_loading">LoadingActivity</string>
+    <string name="loading_text">Pamiętaj o przerwach!</string>
+    <string name="loading_logo">MATHLETE</string>
+    <string-array name="loading_texts">
+        <item>Pamiętaj o przerwach - dbaj o swój umysł i ciało!</item>
+        <item>Dobrze ci idzie!</item>
+        <item>Wchłaniasz wiedzę!</item>
+        <item>Mathlete jest tu aby ci pomóc!</item>
+        <item>Każdy błąd to nowa lekcja!.</item>
+        <item>Odkrywaj radość z nauki!</item>
+        <item>Z Mathlete nauka staje się przyjemnością.</item>
+        <item>Krok po kroku zdobywasz wiedzę.</item>
+        <item>Nie poddawaj się - jesteś coraz bliżej celu!</item>
+        <item>Wierzymy w Ciebie - dasz radę!</item>
+        <item>Z nami nauka staje się fascynującą przygodą.</item>
+        <item tools:ignore="Typos">Odkrywasz nowe horyzonty wiedzy z Mathlete.</item>
+        <item>Sen to najlepszy sposób na utrwalenie wiedzy.</item>
+        <item>Zdrowa dieta i regularne ćwiczenia wspomagają koncentrację.</item>
+        <item>Nie zapominaj o nawodnieniu - pij dużo wody!</item>
+        <item>Nie przeciążaj się - nauka powinna być przyjemnością!</item>
+        <item>Znajdź czas na relaks i odpoczynek - to klucz do sukcesu!</item>
+        <item>Nagradzaj się za osiągnięcia - motywuj się do dalszej nauki!</item>
+    </string-array>
 </resources>

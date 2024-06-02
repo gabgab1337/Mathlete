@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="Theme.Mathlete" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="fontFamily">@font/font_family</item>
         <item name="android:windowBackground">@color/background_color</item>
