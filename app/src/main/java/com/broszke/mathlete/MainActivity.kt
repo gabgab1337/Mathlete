@@ -38,122 +38,122 @@ class MainActivity : AppCompatActivity() {
             .build()
 
         googleSignInClient = GoogleSignIn.getClient(this, gso)
-                // Generator buttony
-                val buttonIds = arrayOf(
-                    R.id.buttonLinearGenerator,
-                    R.id.buttonQuadraticGenerator,
-                    R.id.buttonVortex,
-                    R.id.buttonPerpendicularParallel,
-                    R.id.buttonMultiplication1,
-                    R.id.buttonMultiplication2,
-                )
+        // Generator buttony
+        val buttonIds = arrayOf(
+            R.id.buttonLinearGenerator,
+            R.id.buttonQuadraticGenerator,
+            R.id.buttonVortex,
+            R.id.buttonPerpendicularParallel,
+            R.id.buttonMultiplication1,
+            R.id.buttonMultiplication2,
+        )
 
-                val generatorButtons = buttonIds.map { findViewById<Button>(it) }
+        val generatorButtons = buttonIds.map { findViewById<Button>(it) }
 
-                val buttonLessons: Button = findViewById(R.id.buttonLessons)
-                buttonLessons.setOnClickListener {
-                    centerSceneText.visibility = View.VISIBLE
-                    generatorButtons.forEach { it.visibility = View.GONE }
-                    centerSceneText.text = "TBD\nLekcje tutaj o"
-                }
-
-                val buttonProgress: Button = findViewById(R.id.buttonProgress)
-                buttonProgress.setOnClickListener {
-                    centerSceneText.visibility = View.VISIBLE
-                    generatorButtons.forEach { it.visibility = View.GONE }
-                    centerSceneText.text = "TBD\nProgressik"
-                }
-
-                val buttonGenerator: Button = findViewById(R.id.buttonGenerator)
-                buttonGenerator.setOnClickListener {
-                    centerSceneText.visibility = View.GONE
-                    generatorButtons.forEach { it.visibility = View.VISIBLE }
-                }
-
-                generatorButtons.forEachIndexed { index, button ->
-                    button.setOnClickListener {
-                        val intent = Intent(this, QuizActivity::class.java)
-                        intent.putExtra("generatorType", index)
-                        startActivity(intent)
-                    }
-        val buttonLogin: Button = findViewById(R.id.buttonLogin)
-        buttonLogin.setOnClickListener {
-            buttonLogin.visibility = View.GONE
-            signIn()
+        val buttonLessons: Button = findViewById(R.id.buttonLessons)
+        buttonLessons.setOnClickListener {
+            centerSceneText.visibility = View.VISIBLE
+            generatorButtons.forEach { it.visibility = View.GONE }
+            centerSceneText.text = "TBD\nLekcje tutaj o"
         }
 
-        val buttonProfile: Button = findViewById(R.id.buttonProfile)
-        buttonProfile.setOnClickListener {
-            if (auth.currentUser != null) {
+        val buttonProgress: Button = findViewById(R.id.buttonProgress)
+        buttonProgress.setOnClickListener {
+            centerSceneText.visibility = View.VISIBLE
+            generatorButtons.forEach { it.visibility = View.GONE }
+            centerSceneText.text = "TBD\nProgressik"
+        }
+
+        val buttonGenerator: Button = findViewById(R.id.buttonGenerator)
+        buttonGenerator.setOnClickListener {
+            centerSceneText.visibility = View.GONE
+            generatorButtons.forEach { it.visibility = View.VISIBLE }
+        }
+
+        generatorButtons.forEachIndexed { index, button ->
+            button.setOnClickListener {
+                val intent = Intent(this, QuizActivity::class.java)
+                intent.putExtra("generatorType", index)
+                startActivity(intent)
+            }
+            val buttonLogin: Button = findViewById(R.id.buttonLogin)
+            buttonLogin.setOnClickListener {
                 buttonLogin.visibility = View.GONE
-            } else {
-                buttonLogin.visibility = View.VISIBLE
+                signIn()
             }
-        }
-    }
 
-    private fun signIn() {
-        val signInIntent = googleSignInClient.signInIntent
-        startActivityForResult(signInIntent, RC_SIGN_IN)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == RC_SIGN_IN) {
-            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-            try {
-                val account = task.getResult(ApiException::class.java)!!
-                firebaseAuthWithGoogle(account.idToken!!)
-            } catch (e: ApiException) {
-                // LogIn Error
-            }
-        }
-    }
-
-    private fun firebaseAuthWithGoogle(idToken: String) {
-        val credential = GoogleAuthProvider.getCredential(idToken, null)
-        auth.signInWithCredential(credential)
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    // LogIn Git
-                    val user = auth.currentUser
-                    // Add data for Firestore user
-                    user?.let { addUserToFirestore(it) }
+            val buttonProfile: Button = findViewById(R.id.buttonProfile)
+            buttonProfile.setOnClickListener {
+                if (auth.currentUser != null) {
+                    buttonLogin.visibility = View.GONE
                 } else {
-                    // LogIn NGit
+                    buttonLogin.visibility = View.VISIBLE
                 }
             }
-    }
+        }}
 
-    private fun addUserToFirestore(user: FirebaseUser) {
-        val userId = user.uid
-        val userRef = db.collection("users").document(userId)
+        private fun signIn() {
+            val signInIntent = googleSignInClient.signInIntent
+            startActivityForResult(signInIntent, RC_SIGN_IN)
+        }
 
-        // check if user exist already
-        userRef.get().addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                val document = task.result
-                if (!document.exists()) {
-                    // if not exist add
-                    val userData = hashMapOf(
-                        "email" to user.email,
-                        "completedQuizzes" to 0,
-                        "incorrectAnswers" to 0,
-                        "correctAnswers" to 0
-                    )
+        override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+            super.onActivityResult(requestCode, resultCode, data)
 
-                    userRef.set(userData)
-                        .addOnSuccessListener {
-                            // Data aupdate Git
-                        }
-                        .addOnFailureListener { e ->
-                            // Data update NGit
-                        }
+            if (requestCode == RC_SIGN_IN) {
+                val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+                try {
+                    val account = task.getResult(ApiException::class.java)!!
+                    firebaseAuthWithGoogle(account.idToken!!)
+                } catch (e: ApiException) {
+                    // LogIn Error
                 }
-            } else {
-                // Error download document
+            }
+        }
+
+        private fun firebaseAuthWithGoogle(idToken: String) {
+            val credential = GoogleAuthProvider.getCredential(idToken, null)
+            auth.signInWithCredential(credential)
+                .addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful) {
+                        // LogIn Git
+                        val user = auth.currentUser
+                        // Add data for Firestore user
+                        user?.let { addUserToFirestore(it) }
+                    } else {
+                        // LogIn NGit
+                    }
+                }
+        }
+
+        private fun addUserToFirestore(user: FirebaseUser) {
+            val userId = user.uid
+            val userRef = db.collection("users").document(userId)
+
+            // check if user exist already
+            userRef.get().addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val document = task.result
+                    if (!document.exists()) {
+                        // if not exist add
+                        val userData = hashMapOf(
+                            "email" to user.email,
+                            "completedQuizzes" to 0,
+                            "incorrectAnswers" to 0,
+                            "correctAnswers" to 0
+                        )
+
+                        userRef.set(userData)
+                            .addOnSuccessListener {
+                                // Data aupdate Git
+                            }
+                            .addOnFailureListener { e ->
+                                // Data update NGit
+                            }
+                    }
+                } else {
+                    // Error download document
+                }
             }
         }
     }
-}
