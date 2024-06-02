@@ -27,7 +27,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_screen_layout)
-
+        val centerSceneText: TextView = findViewById(R.id.centerText)
+        centerSceneText.text = "Witaj w Mathlete!"
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
 
@@ -37,21 +38,44 @@ class MainActivity : AppCompatActivity() {
             .build()
 
         googleSignInClient = GoogleSignIn.getClient(this, gso)
+                // Generator buttony
+                val buttonIds = arrayOf(
+                    R.id.buttonLinearGenerator,
+                    R.id.buttonQuadraticGenerator,
+                    R.id.buttonVortex,
+                    R.id.buttonPerpendicularParallel,
+                    R.id.buttonMultiplication1,
+                    R.id.buttonMultiplication2,
+                )
 
-        val centerSceneText: TextView = findViewById(R.id.centerText)
-        val buttonGenerator: Button = findViewById(R.id.buttonGenerator)
-        buttonGenerator.setOnClickListener {
-            val intent = Intent(this, QuizActivity::class.java)
-            startActivity(intent)
-        }
-        val buttonLessons: Button = findViewById(R.id.buttonLessons)
-        buttonLessons.setOnClickListener {
-            centerSceneText.text = "Lekcje tutaj o"
-        }
-        val buttonProgress: Button = findViewById(R.id.buttonProgress)
-        buttonProgress.setOnClickListener {
-            centerSceneText.text = "Progressik"
-        }
+                val generatorButtons = buttonIds.map { findViewById<Button>(it) }
+
+                val buttonLessons: Button = findViewById(R.id.buttonLessons)
+                buttonLessons.setOnClickListener {
+                    centerSceneText.visibility = View.VISIBLE
+                    generatorButtons.forEach { it.visibility = View.GONE }
+                    centerSceneText.text = "TBD\nLekcje tutaj o"
+                }
+
+                val buttonProgress: Button = findViewById(R.id.buttonProgress)
+                buttonProgress.setOnClickListener {
+                    centerSceneText.visibility = View.VISIBLE
+                    generatorButtons.forEach { it.visibility = View.GONE }
+                    centerSceneText.text = "TBD\nProgressik"
+                }
+
+                val buttonGenerator: Button = findViewById(R.id.buttonGenerator)
+                buttonGenerator.setOnClickListener {
+                    centerSceneText.visibility = View.GONE
+                    generatorButtons.forEach { it.visibility = View.VISIBLE }
+                }
+
+                generatorButtons.forEachIndexed { index, button ->
+                    button.setOnClickListener {
+                        val intent = Intent(this, QuizActivity::class.java)
+                        intent.putExtra("generatorType", index)
+                        startActivity(intent)
+                    }
         val buttonLogin: Button = findViewById(R.id.buttonLogin)
         buttonLogin.setOnClickListener {
             buttonLogin.visibility = View.GONE
