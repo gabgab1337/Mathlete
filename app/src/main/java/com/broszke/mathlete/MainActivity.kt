@@ -13,16 +13,23 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.auth.FirebaseUser
+
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var googleSignInClient: GoogleSignInClient
+    private lateinit var db: FirebaseFirestore
     private val RC_SIGN_IN = 9001
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_screen_layout)
+
+        auth = FirebaseAuth.getInstance()
+        db = FirebaseFirestore.getInstance()
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))
@@ -30,8 +37,6 @@ class MainActivity : AppCompatActivity() {
             .build()
 
         googleSignInClient = GoogleSignIn.getClient(this, gso)
-
-        auth = FirebaseAuth.getInstance()
 
         val centerSceneText: TextView = findViewById(R.id.centerText)
         val buttonGenerator: Button = findViewById(R.id.buttonGenerator)
@@ -49,6 +54,7 @@ class MainActivity : AppCompatActivity() {
         }
         val buttonLogin: Button = findViewById(R.id.buttonLogin)
         buttonLogin.setOnClickListener {
+            buttonLogin.visibility = View.GONE
             signIn()
         }
 
@@ -76,7 +82,7 @@ class MainActivity : AppCompatActivity() {
                 val account = task.getResult(ApiException::class.java)!!
                 firebaseAuthWithGoogle(account.idToken!!)
             } catch (e: ApiException) {
-                // Obsłuż błąd logowania
+                // LogIn Error
             }
         }
     }
@@ -86,11 +92,44 @@ class MainActivity : AppCompatActivity() {
         auth.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    // Login git
+                    // LogIn Git
                     val user = auth.currentUser
+                    // Add data for Firestore user
+                    user?.let { addUserToFirestore(it) }
                 } else {
-                    // Login fail
+                    // LogIn NGit
                 }
             }
+    }
+
+    private fun addUserToFirestore(user: FirebaseUser) {
+        val userId = user.uid
+        val userRef = db.collection("users").document(userId)
+
+        // check if user exist already
+        userRef.get().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val document = task.result
+                if (!document.exists()) {
+                    // if not exist add
+                    val userData = hashMapOf(
+                        "email" to user.email,
+                        "completedQuizzes" to 0,
+                        "incorrectAnswers" to 0,
+                        "correctAnswers" to 0
+                    )
+
+                    userRef.set(userData)
+                        .addOnSuccessListener {
+                            // Data aupdate Git
+                        }
+                        .addOnFailureListener { e ->
+                            // Data update NGit
+                        }
+                }
+            } else {
+                // Error download document
+            }
+        }
     }
 }
