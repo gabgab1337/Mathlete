@@ -7,10 +7,8 @@
 
     <!-- Top Section -->
     <include layout="@layout/top_buttons" />
-
     <!-- Generator Buttons -->
     <include layout="@layout/generator_buttons" />
-
     <!-- Center Section -->
     <FrameLayout
         android:id="@+id/centerSection"
@@ -22,6 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center" />
+        <include layout="@layout/extra_button" />
     </FrameLayout>
 
     <!-- Bottom Section -->

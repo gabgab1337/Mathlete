@@ -5,6 +5,7 @@
     <string name="buttonProgress">Postępy</string>
     <string name="buttonLessons">Lekcje</string>
     <string name="buttonGenerator">Generator</string>
+    <string name="buttonLogin">Zaloguj sie</string>
     <string name="timer" />
     <string name="question" />
     <string name="buttonAnswer1" />
@@ -12,6 +13,7 @@
     <string name="buttonAnswer3" />
     <string name="buttonAnswer4" />
     <string name="questionsLeft" />
+    <string name="default_web_client_id" translatable="false">ID_KLIENTA_WEBOWEGO</string>
     <string name="buttonLinearGenerator">Równania liniowe</string>
     <string name="buttonQuadraticGenerator">Równania kwadratowe</string>
     <string name="buttonVortex">Wierzchołek funkcji kwadratowej</string>

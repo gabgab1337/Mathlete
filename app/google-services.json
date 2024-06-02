@@ -14,15 +14,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "8614619212-211g6pfqgluvg4gpm2t3iibtoj5uobjb.apps.googleusercontent.com",
+          "client_id": "8614619212-a9qqc8rvre0rc200n4rf53ngqqrac09g.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.broszke.mathlete",
-            "certificate_hash": "6ec818fdcb577b4e70c4b161201ee4896c7500fc"
+            "certificate_hash": "3b0deaf0e3af59cf484d10eb2bd8e9e9be55262c"
           }
         },
         {
-          "client_id": "8614619212-2gbu93k65dek7uldslvpmnimjmui3jlg.apps.googleusercontent.com",
+          "client_id": "8614619212-rfcbnem9qocv6isqatoufmuv5n15m7ol.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -35,7 +35,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "8614619212-2gbu93k65dek7uldslvpmnimjmui3jlg.apps.googleusercontent.com",
+              "client_id": "8614619212-2dq3m591l2f59b2q6l9qq7dddbinufr6.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
