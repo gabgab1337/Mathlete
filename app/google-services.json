@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "8614619212-ak2rh8a5qhg0h644khugpbd3ols3v5g7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.broszke.mathlete",
+            "certificate_hash": "ddf3dd23bf53496afdf73632e3b85024e46fb296"
+          }
+        },
+        {
           "client_id": "8614619212-rfcbnem9qocv6isqatoufmuv5n15m7ol.apps.googleusercontent.com",
           "client_type": 3
         }

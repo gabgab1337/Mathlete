@@ -144,7 +144,7 @@ class MainActivity : AppCompatActivity() {
                     if (!document.exists()) {
                         // if not exist add
                         val userData = hashMapOf(
-                            "email" to user.email,
+                            "user" to auth.currentUser,
                             "completedQuizzes" to 0,
                             "incorrectAnswers" to 0,
                             "correctAnswers" to 0
