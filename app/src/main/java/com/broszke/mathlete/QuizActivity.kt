@@ -216,6 +216,10 @@ class QuizActivity : AppCompatActivity() {
         } else {
             timer.cancel()
             questionText.text = "\n\n\n\nKoniec!\nPoprawne odpowiedzi: $correctAnswers."
+            //send to MainActivity
+            val intent = Intent(this, MainActivity::class.java)
+            intent.putExtra("correctAnswers", correctAnswers)
+            startActivity(intent)
             endQuiz()
         }
     }

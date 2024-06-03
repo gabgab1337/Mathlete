@@ -25,6 +25,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var db: FirebaseFirestore
     private lateinit var centerSceneText: TextView
     private val RC_SIGN_IN = 9001
+    private var receivedVariable: Int = 0
+    private var poprawne: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +35,9 @@ class MainActivity : AppCompatActivity() {
         centerSceneText.text = "Witaj w Mathlete!"
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
+        //recieve
+        receivedVariable = intent.getIntExtra("correctAnswers", 0)
+        poprawne += receivedVariable
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))
@@ -63,7 +68,8 @@ class MainActivity : AppCompatActivity() {
         buttonProgress.setOnClickListener {
             centerSceneText.visibility = View.VISIBLE
             generatorButtons.forEach { it.visibility = View.GONE }
-            centerSceneText.text = "TBD\nProgressik"
+            //received Ans
+            centerSceneText.text = "Masz Dobrze : $poprawne\n"
         }
 
         val buttonGenerator: Button = findViewById(R.id.buttonGenerator)
