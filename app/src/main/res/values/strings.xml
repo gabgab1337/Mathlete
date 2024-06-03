@@ -13,7 +13,7 @@
     <string name="buttonAnswer3" />
     <string name="buttonAnswer4" />
     <string name="questionsLeft" />
-    <string name="default_web_client_id" translatable="false">ID_KLIENTA_WEBOWEGO</string>
+    <string name="default_web_client_id" translatable="false">8614619212-rfcbnem9qocv6isqatoufmuv5n15m7ol.apps.googleusercontent.com</string>
     <string name="buttonLinearGenerator">Równania liniowe</string>
     <string name="buttonQuadraticGenerator">Równania kwadratowe</string>
     <string name="buttonVortex">Wierzchołek funkcji kwadratowej</string>

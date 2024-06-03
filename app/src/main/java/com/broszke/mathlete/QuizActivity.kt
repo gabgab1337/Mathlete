@@ -217,8 +217,12 @@ class QuizActivity : AppCompatActivity() {
             timer.cancel()
             questionText.text = "\n\n\n\nKoniec!\nPoprawne odpowiedzi: $correctAnswers."
             //send to MainActivity
-            val intent = Intent(this, MainActivity::class.java)
-            intent.putExtra("correctAnswers", correctAnswers)
+            val intent = Intent(this, MainActivity::class.java).apply {
+                val incorrectAnswers = 5 - correctAnswers
+                putExtra("completedQuizzes", 1)
+                putExtra("correctAnswers", correctAnswers)
+                putExtra("incorrectAnswers", incorrectAnswers)
+            }
             startActivity(intent)
             endQuiz()
         }

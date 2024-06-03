@@ -8,7 +8,6 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
@@ -16,7 +15,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.auth.FirebaseUser
-
+import android.util.Log
 
 class MainActivity : AppCompatActivity() {
 
@@ -26,7 +25,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var centerSceneText: TextView
     private val RC_SIGN_IN = 9001
     private var receivedVariable: Int = 0
-    private var poprawne: Int = 0
+    private var badAns: Int = 0
+    private var quizCount: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,9 +35,6 @@ class MainActivity : AppCompatActivity() {
         centerSceneText.text = "Witaj w Mathlete!"
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
-        //recieve
-        receivedVariable = intent.getIntExtra("correctAnswers", 0)
-        poprawne += receivedVariable
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))
@@ -45,6 +42,22 @@ class MainActivity : AppCompatActivity() {
             .build()
 
         googleSignInClient = GoogleSignIn.getClient(this, gso)
+
+        if (auth.currentUser != null) {
+            fetchUserData(auth.currentUser!!)
+        }
+
+        // Odbieranie danych z intencji
+        val completedQuizzes = intent.getIntExtra("completedQuizzes", 0)
+        val correctAnswers = intent.getIntExtra("correctAnswers", 0)
+        val incorrectAnswers = intent.getIntExtra("incorrectAnswers", 0)
+
+        if (completedQuizzes > 0 || correctAnswers > 0 || incorrectAnswers > 0) {
+            auth.currentUser?.let { user ->
+                updateUserStats(user, completedQuizzes, correctAnswers, incorrectAnswers)
+            }
+        }
+
         // Generator buttony
         val buttonIds = arrayOf(
             R.id.buttonLinearGenerator,
@@ -68,8 +81,7 @@ class MainActivity : AppCompatActivity() {
         buttonProgress.setOnClickListener {
             centerSceneText.visibility = View.VISIBLE
             generatorButtons.forEach { it.visibility = View.GONE }
-            //received Ans
-            centerSceneText.text = "Masz Dobrze : $poprawne\n"
+            centerSceneText.text = "Zrobiles : $quizCount quizów\nMasz Dobrze : $receivedVariable odpowiedzi\nMasz źle : $badAns odpowiedzi"
         }
 
         val buttonGenerator: Button = findViewById(R.id.buttonGenerator)
@@ -84,89 +96,149 @@ class MainActivity : AppCompatActivity() {
                 intent.putExtra("generatorType", index)
                 startActivity(intent)
             }
-            val buttonLogin: Button = findViewById(R.id.buttonLogin)
-            buttonLogin.setOnClickListener {
+        }
+
+        val buttonLogin: Button = findViewById(R.id.buttonLogin)
+        buttonLogin.setOnClickListener {
+            buttonLogin.visibility = View.GONE
+            signIn()
+        }
+
+        val buttonProfile: Button = findViewById(R.id.buttonProfile)
+        buttonProfile.setOnClickListener {
+            if (auth.currentUser != null) {
                 buttonLogin.visibility = View.GONE
-                signIn()
-            }
-
-            val buttonProfile: Button = findViewById(R.id.buttonProfile)
-            buttonProfile.setOnClickListener {
-                if (auth.currentUser != null) {
-                    buttonLogin.visibility = View.GONE
-                } else {
-                    buttonLogin.visibility = View.VISIBLE
-                }
-            }
-        }}
-
-        private fun signIn() {
-            val signInIntent = googleSignInClient.signInIntent
-            startActivityForResult(signInIntent, RC_SIGN_IN)
-        }
-
-        override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-            super.onActivityResult(requestCode, resultCode, data)
-
-            if (requestCode == RC_SIGN_IN) {
-                val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-                try {
-                    val account = task.getResult(ApiException::class.java)!!
-                    firebaseAuthWithGoogle(account.idToken!!)
-
-                } catch (e: ApiException) {
-
-                    // LogIn Error
-                }
-            }
-        }
-
-        @SuppressLint("SetTextI18n")
-        private fun firebaseAuthWithGoogle(idToken: String) {
-            val credential = GoogleAuthProvider.getCredential(idToken, null)
-            auth.signInWithCredential(credential)
-                .addOnCompleteListener(this) { task ->
-                    if (task.isSuccessful) {
-                        // LogIn Git
-                        val user = auth.currentUser
-                        centerSceneText.text = "Witaj ${user?.displayName}!"
-                        // Add data for Firestore user
-                        user?.let { addUserToFirestore(it) }
-                    } else {
-                        // LogIn NGit
-                        centerSceneText.text = "Sorki ale nie działa"
-                    }
-                }
-        }
-
-        private fun addUserToFirestore(user: FirebaseUser) {
-            val userId = user.uid
-            val userRef = db.collection("users").document(userId)
-
-            // check if user exist already
-            userRef.get().addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val document = task.result
-                    if (!document.exists()) {
-                        // if not exist add
-                        val userData = hashMapOf(
-                            "user" to auth.currentUser,
-                            "completedQuizzes" to 0,
-                            "incorrectAnswers" to 0,
-                            "correctAnswers" to 0
-                        )
-
-                        userRef.set(userData)
-                            .addOnSuccessListener {
-                                // Data aupdate Git
-                            }
-                            .addOnFailureListener { e ->
-                                // Data update NGit
-                            }
-                    }
-                } else {
-                    // Error download document
-                }
+            } else {
+                buttonLogin.visibility = View.VISIBLE
             }
         }
     }
+
+    private fun signIn() {
+        val signInIntent = googleSignInClient.signInIntent
+        startActivityForResult(signInIntent, RC_SIGN_IN)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == RC_SIGN_IN) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            try {
+                val account = task.getResult(ApiException::class.java)!!
+                firebaseAuthWithGoogle(account.idToken!!)
+
+            } catch (e: ApiException) {
+                // LogIn Error
+            }
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun firebaseAuthWithGoogle(idToken: String) {
+        val credential = GoogleAuthProvider.getCredential(idToken, null)
+        auth.signInWithCredential(credential)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    // LogIn Git
+                    val user = auth.currentUser
+                    centerSceneText.text = "Witaj ${user?.displayName}!"
+                    // Add data for Firestore user
+                    user?.let { addUserToFirestore(it) }
+                } else {
+                    // LogIn NGit
+                    centerSceneText.text = "Sorki ale nie działa"
+                }
+            }
+    }
+
+    private fun addUserToFirestore(user: FirebaseUser) {
+        val userId = user.uid
+        val userRef = db.collection("users").document(userId)
+
+        // Check if user exists already
+        userRef.get().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val document = task.result
+                if (!document.exists()) {
+                    // If not exist, add
+                    val userData = hashMapOf(
+                        "uid" to userId,
+                        "name" to user.displayName,
+                        "email" to user.email,
+                        "completedQuizzes" to 0,
+                        "incorrectAnswers" to 0,
+                        "correctAnswers" to 0
+                    )
+
+                    userRef.set(userData)
+                        .addOnSuccessListener {
+                            // Data update successful
+                            Log.d("Firestore", "User data successfully written!")
+                        }
+                        .addOnFailureListener { e ->
+                            // Data update failed
+                            Log.w("Firestore", "Error writing user data", e)
+                        }
+                }
+            } else {
+                // Error getting document
+                Log.w("Firestore", "Error getting document", task.exception)
+            }
+        }
+    }
+
+    private fun updateUserStats(user: FirebaseUser, completedQuizzes: Int, correctAnswers: Int, incorrectAnswers: Int) {
+        val userId = user.uid
+        val userRef = db.collection("users").document(userId)
+
+        userRef.get().addOnSuccessListener { document ->
+            if (document.exists()) {
+                val currentCompletedQuizzes = document.getLong("completedQuizzes") ?: 0
+                val currentCorrectAnswers = document.getLong("correctAnswers") ?: 0
+                val currentIncorrectAnswers = document.getLong("incorrectAnswers") ?: 0
+
+                val newCompletedQuizzes = currentCompletedQuizzes + completedQuizzes
+                val newCorrectAnswers = currentCorrectAnswers + correctAnswers
+                val newIncorrectAnswers = currentIncorrectAnswers + incorrectAnswers
+
+                val updatedData = mapOf(
+                    "completedQuizzes" to newCompletedQuizzes,
+                    "correctAnswers" to newCorrectAnswers,
+                    "incorrectAnswers" to newIncorrectAnswers
+                )
+
+                userRef.update(updatedData)
+                    .addOnSuccessListener {
+                        // Data update successful
+                        quizCount = newCompletedQuizzes.toInt()
+                        receivedVariable = newCorrectAnswers.toInt()
+                        badAns = newIncorrectAnswers.toInt()
+                        Log.d("Firestore", "User stats successfully updated!")
+                    }
+                    .addOnFailureListener { e ->
+                        // Data update failed
+                        Log.w("Firestore", "Error updating user stats", e)
+                    }
+            }
+        }
+    }
+
+    private fun fetchUserData(user: FirebaseUser) {
+        val userId = user.uid
+        val userRef = db.collection("users").document(userId)
+
+        userRef.get().addOnSuccessListener { document ->
+            if (document.exists()) {
+                val currentCompletedQuizzes = document.getLong("completedQuizzes") ?: 0
+                val currentCorrectAnswers = document.getLong("correctAnswers") ?: 0
+                val currentIncorrectAnswers = document.getLong("incorrectAnswers") ?: 0
+
+                quizCount = currentCompletedQuizzes.toInt()
+                receivedVariable = currentCorrectAnswers.toInt()
+                badAns = currentIncorrectAnswers.toInt()
+
+            }
+        }
+    }
+}
