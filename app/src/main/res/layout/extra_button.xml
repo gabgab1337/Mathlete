@@ -12,5 +12,7 @@ android:orientation="vertical">
         android:text="@string/buttonLogin"
         android:visibility="gone"
         android:layout_gravity="center"
+        android:padding="6dp"
+        android:layout_margin="8dp"
          />
 </LinearLayout>

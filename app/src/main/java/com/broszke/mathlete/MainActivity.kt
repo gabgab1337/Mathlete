@@ -16,6 +16,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.auth.FirebaseUser
 import android.util.Log
+import kotlin.math.round
 
 class MainActivity : AppCompatActivity() {
 
@@ -23,6 +24,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var googleSignInClient: GoogleSignInClient
     private lateinit var db: FirebaseFirestore
     private lateinit var centerSceneText: TextView
+    private lateinit var progressText: TextView
     private val RC_SIGN_IN = 9001
     private var receivedVariable: Int = 0
     private var badAns: Int = 0
@@ -32,6 +34,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_screen_layout)
         centerSceneText = findViewById(R.id.centerText)
+        progressText = findViewById(R.id.progressText)
         centerSceneText.text = "Witaj w Mathlete!"
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
@@ -69,24 +72,38 @@ class MainActivity : AppCompatActivity() {
         )
 
         val generatorButtons = buttonIds.map { findViewById<Button>(it) }
+        val buttonLogin: Button = findViewById(R.id.buttonLogin)
 
         val buttonLessons: Button = findViewById(R.id.buttonLessons)
         buttonLessons.setOnClickListener {
             centerSceneText.visibility = View.VISIBLE
+            progressText.visibility = View.GONE
+            buttonLogin.visibility = View.GONE
             generatorButtons.forEach { it.visibility = View.GONE }
-            centerSceneText.text = "TBD\nLekcje tutaj o"
+            centerSceneText.text = "Rób quizy! ;)"
         }
 
         val buttonProgress: Button = findViewById(R.id.buttonProgress)
         buttonProgress.setOnClickListener {
             centerSceneText.visibility = View.VISIBLE
+            progressText.visibility = View.VISIBLE
+            buttonLogin.visibility = View.GONE
+            if (auth.currentUser != null) {
+                fetchUserData(auth.currentUser!!)
+            }
+            auth.currentUser?.let { user ->
+                updateUserStats(user, completedQuizzes, correctAnswers, incorrectAnswers)
+            }
             generatorButtons.forEach { it.visibility = View.GONE }
-            centerSceneText.text = "Zrobiles : $quizCount quizów\nMasz Dobrze : $receivedVariable odpowiedzi\nMasz źle : $badAns odpowiedzi"
+            progressText.text = "Twoja skuteczność: ${round(receivedVariable.toDouble() / (badAns.toDouble() + receivedVariable) * 100).toInt()}%"
+            centerSceneText.text = "Zrobiłes $quizCount quizów, gratulacje :)\nPoprawne odpowiedzi: $receivedVariable\nBłędne odpowiedzi: $badAns"
         }
 
         val buttonGenerator: Button = findViewById(R.id.buttonGenerator)
         buttonGenerator.setOnClickListener {
             centerSceneText.visibility = View.GONE
+            progressText.visibility = View.GONE
+            buttonLogin.visibility = View.GONE
             generatorButtons.forEach { it.visibility = View.VISIBLE }
         }
 
@@ -98,7 +115,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        val buttonLogin: Button = findViewById(R.id.buttonLogin)
         buttonLogin.setOnClickListener {
             buttonLogin.visibility = View.GONE
             signIn()
